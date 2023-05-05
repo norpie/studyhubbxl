@@ -6,6 +6,7 @@ mod models {
     use actix_web::{body::BoxBody, http::header::ContentType, HttpResponse, Responder};
     use serde::Serialize;
 
+    /// Wrapper for every response made by the backend
     #[derive(Debug, Clone, Serialize)]
     pub struct ApiResponse<T> {
         result: Option<T>,
@@ -14,6 +15,7 @@ mod models {
     }
 
     impl<T: Serialize> ApiResponse<T> {
+        /// Wrap object in ApiResponse
         pub fn new(object: T) -> Self {
             ApiResponse {
                 result: Some(object),
@@ -22,6 +24,7 @@ mod models {
             }
         }
 
+        /// Wrap error in ApiResponse
         pub fn error(status: u8, error: String) -> Self {
             ApiResponse {
                 result: None,
