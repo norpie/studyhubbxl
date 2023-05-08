@@ -47,3 +47,54 @@ impl<T: Serialize> Responder for ApiResponse<T> {
         }
     }
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+struct User {
+    id: Uuid,
+    email: String,
+    username: String,
+    password: String,
+    salt: Uuid,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum Function {
+    Cafe,
+    Library,
+    StudySpace,
+    Campus,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum Attribute {
+    Sockets,
+    Wifi,
+    CoWorking,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum Noise {
+    Noisy,
+    Moderate,
+    Quiet,
+    Silent,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Location {
+    id: Uuid,
+    name: String,
+    function: Function,
+    attributes: Vec<Attribute>,
+    noise: Noise,
+    address: String,
+    coordinates: (Decimal, Decimal),
+}
+
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Favourite {
+    id: Uuid,
+    location_id: Uuid,
+    user_id: Uuid,
+}
