@@ -40,6 +40,7 @@ mod models {
             let result = serde_json::to_string(&self);
             match result {
                 Ok(json) => HttpResponse::Ok()
+                    .insert_header(("Access-Control-Allow-Origin", "http://localhost:5173"))
                     .content_type(ContentType::json())
                     .body(json),
                 Err(_e) => {
