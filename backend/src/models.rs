@@ -58,7 +58,7 @@ struct User {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum Function {
+enum LocationType {
     Cafe,
     Library,
     StudySpace,
@@ -84,7 +84,7 @@ enum Noise {
 struct Location {
     id: Uuid,
     name: String,
-    function: Function,
+    location_type: LocationType,
     attributes: Vec<Attribute>,
     noise: Noise,
     address: String,
