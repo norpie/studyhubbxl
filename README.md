@@ -10,6 +10,7 @@
 * Download (Windows): https://git-scm.com/download/win
 * Documentatie: https://git-scm.com/docs
 * Getting started video: https://www.youtube.com/watch?v=USjZcfj8yxE
+* Commit Messages: https://www.conventionalcommits.org/en/v1.0.0/
 
 ### Frontend
 * Vue.js: https://vuejs.org/guide/introduction.html#what-is-vue
