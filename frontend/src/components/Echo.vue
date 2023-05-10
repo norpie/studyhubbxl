@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>{{ data }}</p>
+        <p>Result request to backend: {{ data }}</p>
     </div>
 </template>
 
@@ -16,7 +16,7 @@ export default {
         try {
             const response = await fetch("http://localhost:8080", {});
             const data = await response.json();
-            this.data = data;
+            this.data = data['result'];
         } catch (error) {
             if (error instanceof Error) {
                 this.data = error.message;
