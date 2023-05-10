@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Echo from './components/Echo.vue'
+import Button from './components/Button.vue'
 </script>
 
 <template>
-    <Echo/>
+    <Button/>
 </template>
