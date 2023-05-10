@@ -3,6 +3,7 @@ use actix_web::{get, App, HttpServer, Responder};
 use crate::models::ApiResponse;
 
 mod models;
+mod routes;
 
 #[get("/")]
 async fn hello() -> impl Responder {
