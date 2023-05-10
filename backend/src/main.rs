@@ -6,7 +6,7 @@ mod models;
 
 #[get("/")]
 async fn hello() -> impl Responder {
-    ApiResponse::new("hello")
+    ApiResponse::new("Hello world!")
 }
 
 #[actix_web::main]
