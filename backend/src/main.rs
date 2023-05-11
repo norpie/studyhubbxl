@@ -2,6 +2,7 @@ use actix_web::{get, App, HttpServer, Responder};
 
 use crate::models::ApiResponse;
 
+mod levensthein;
 mod models;
 
 #[get("/")]
