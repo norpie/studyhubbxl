@@ -12,17 +12,19 @@ Bronnen:
 
 use std::cmp::{min, Ordering};
 
+use actix_web::web::Query;
+
 fn levensthein_distance(s1: &str, s2: &str) -> usize {
     let x = s1.len();
     let y = s2.len();
 
-    let mut vector_a: Vec<Vec<usize>> = vec![vec![0; x + 1]; y + 1];
+    let mut a: Vec<Vec<usize>> = vec![vec![0; x + 1]; y + 1];
 
     for i in 0..x {
-        vector_a[i][0] = i;
+        a[i][0] = i;
     }
     for j in 0..y {
-        vector_a[0][j] = j;
+        a[0][j] = j;
     }
 
     for i in 1..=x {
@@ -33,15 +35,41 @@ fn levensthein_distance(s1: &str, s2: &str) -> usize {
                 1
             };
 
-            vector_a[i][j] = min(
-                vector_a[i - 1][j] + 1,
-                min(
-                    vector_a[i][j - 1] + 1,
-                    vector_a[i - 1][j - 1] + substitution_cost,
-                ),
+            a[i][j] = min(
+                a[i - 1][j] + 1,
+                min(a[i][j - 1] + 1, a[i - 1][j - 1] + substitution_cost),
             );
         }
     }
 
-    vector_a[x][y]
+    a[x][y]
+}
+/*
+[1:36 PM] KUOSMANEN Konsta (s)
+    je wilt dus een functie die een lijst van opties krijgt als strings, en een string, de search term,
+​[1:36 PM] KUOSMANEN Konsta (s)
+    je loopt door elke optie en berekent de levenshtein
+​[1:36 PM] KUOSMANEN Konsta (s)
+    je zet elke optie in een hashmap samen met de levenshtein
+​[1:37 PM] KUOSMANEN Konsta (s)
+    dan sorteer je de hashmap gebaseerd op de levenshtein
+​[1:37 PM] KUOSMANEN Konsta (s)
+    dan return je de hashmap
+​[1:37 PM] KUOSMANEN Konsta (s)
+    of een vec
+
+ */
+fn search_string(query: String, candidates: String, max_distance: usize) String -> Vec<String, usize> {
+    let mut results: Vec<(String, usize)> = Vec::new();
+
+    for candidate in candidates {
+        let distance = levensthein_distance(&query, candidate);
+
+        if distance <= max_distance {
+            results.push((candidate, distance));
+        }
+    }
+
+    results.sort_unstable_by(|a, b| a.1.cmp(&b.1));
+    results.iter().map(|(candidate, _)| *candidate).collect();
 }
