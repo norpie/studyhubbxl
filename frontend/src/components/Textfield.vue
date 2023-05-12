@@ -1,32 +1,27 @@
+
 <script lang="ts">
 export default {
-    props: {p:String},
+    props: {label:String},
 
     data() {return{
-        mail: 'Enter your email',
-        password:'Enter your password'}},
+        text: 'Enter your email',
+    }},
  }
 
 </script>
 
 
 <template>
-<p> Mail </p>
-<input type="text"  class="mail" v-model="mail" placeholder="Enter your email" />
-<p> Password </p>
-<input type="text"  class="password" v-model="password" placeholder="Enter your email" />
+<label for="textfield">{{ label }}</label> 
+<input type="text"  class="mail" v-model="text" placeholder="Enter your email" />
 </template>
 
 <style scoped>
 p{font-weight: bold;}
-.mail{ 
+.textfield{ 
     color: gray;
     border-style: none;
     background-color:white;
 }
-.password{ 
-    color:gray;
-    border-style: none;
-    background-color: white;
-    }
+
 </style>
