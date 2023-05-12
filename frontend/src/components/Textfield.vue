@@ -4,7 +4,7 @@ export default {
     props: {label:String},
 
     data() {return{
-        text: 'Enter your email',
+        text: 'Enter credentials',
     }},
  }
 
@@ -13,15 +13,19 @@ export default {
 
 <template>
 <label for="textfield">{{ label }}</label> 
-<input type="text"  class="mail" v-model="text" placeholder="Enter your email" />
+<input type="text"  class="textfield" v-model="text" />
 </template>
 
 <style scoped>
-p{font-weight: bold;}
+label{
+    font-weight: bold;
+    width: 100%;
+}
 .textfield{ 
     color: gray;
     border-style: none;
     background-color:white;
+    display: block;
+    
 }
-
 </style>
