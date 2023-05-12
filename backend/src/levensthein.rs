@@ -10,7 +10,10 @@ Bronnen:
 -https://youtu.be/GcsAQTMYR1M
  */
 
-use std::cmp::{min, Ordering};
+use std::{
+    cmp::{min, Ordering},
+    result,
+};
 
 use actix_web::web::Query;
 
@@ -59,7 +62,7 @@ fn levensthein_distance(s1: &str, s2: &str) -> usize {
     of een vec
 
  */
-fn search_string(query: String, candidates: String, max_distance: usize) String -> Vec<String, usize> {
+/*fn search_string(query: String, candidates: String, max_distance: usize) String -> Vec<String, usize> {
     let mut results: Vec<(String, usize)> = Vec::new();
 
     for candidate in candidates {
@@ -72,4 +75,37 @@ fn search_string(query: String, candidates: String, max_distance: usize) String 
 
     results.sort_unstable_by(|a, b| a.1.cmp(&b.1));
     results.iter().map(|(candidate, _)| *candidate).collect();
+}*/
+/*fn search_closest_strings(query: String, candidates: &[&str], max_distance: usize) -> Vec<String> {
+    let mut result: Vec<(String, usize)> = Vec::new();
+
+    for candidate in candidates {
+        let disatnce = levensthein_distance(&query, &candidate);
+
+        if distance <= max_distance {
+            result.push((candidate, &distance));
+        }
+    }
+    result.sort_unstable_by(|a, b| a.1.cmp(&b.1));
+    result.iter().map(|(candidate, _)| *candidate).collect()
+}*/
+
+fn search_closest_strings<'a>(
+    query: &str,
+    candidates: Vec<&'a str>,
+    max_distance: usize,
+) -> Vec<&'a str> {
+    let mut result: Vec<(&str, usize)> = Vec::new();
+
+    for candidate in candidates.iter() {
+        let distance = levensthein_distance(query, candidate);
+
+        if distance <= max_distance {
+            result.push((candidate, distance));
+        }
+    }
+
+    result.sort_unstable_by_key(|(_, distance)| *distance);
+
+    result.iter().map(|(candidate, _)| *candidate).collect()
 }
