@@ -47,49 +47,9 @@ fn levensthein_distance(s1: &str, s2: &str) -> usize {
 
     a[x][y]
 }
-/*
-[1:36 PM] KUOSMANEN Konsta (s)
-    je wilt dus een functie die een lijst van opties krijgt als strings, en een string, de search term,
-​[1:36 PM] KUOSMANEN Konsta (s)
-    je loopt door elke optie en berekent de levenshtein
-​[1:36 PM] KUOSMANEN Konsta (s)
-    je zet elke optie in een hashmap samen met de levenshtein
-​[1:37 PM] KUOSMANEN Konsta (s)
-    dan sorteer je de hashmap gebaseerd op de levenshtein
-​[1:37 PM] KUOSMANEN Konsta (s)
-    dan return je de hashmap
-​[1:37 PM] KUOSMANEN Konsta (s)
-    of een vec
 
- */
-/*fn search_string(query: String, candidates: String, max_distance: usize) String -> Vec<String, usize> {
-    let mut results: Vec<(String, usize)> = Vec::new();
-
-    for candidate in candidates {
-        let distance = levensthein_distance(&query, candidate);
-
-        if distance <= max_distance {
-            results.push((candidate, distance));
-        }
-    }
-
-    results.sort_unstable_by(|a, b| a.1.cmp(&b.1));
-    results.iter().map(|(candidate, _)| *candidate).collect();
-}*/
-/*fn search_closest_strings(query: String, candidates: &[&str], max_distance: usize) -> Vec<String> {
-    let mut result: Vec<(String, usize)> = Vec::new();
-
-    for candidate in candidates {
-        let disatnce = levensthein_distance(&query, &candidate);
-
-        if distance <= max_distance {
-            result.push((candidate, &distance));
-        }
-    }
-    result.sort_unstable_by(|a, b| a.1.cmp(&b.1));
-    result.iter().map(|(candidate, _)| *candidate).collect()
-}*/
-
+// derde keer de goeie keer?
+//attemp 3 :
 fn search_closest_strings<'a>(
     query: &str,
     candidates: Vec<&'a str>,
@@ -109,3 +69,49 @@ fn search_closest_strings<'a>(
 
     result.iter().map(|(candidate, _)| *candidate).collect()
 }
+/*
+[1:36 PM] KUOSMANEN Konsta (s)
+je wilt dus een functie die een lijst van opties krijgt als strings, en een string, de search term,
+​[1:36 PM] KUOSMANEN Konsta (s)
+    je loopt door elke optie en berekent de levenshtein
+​[1:36 PM] KUOSMANEN Konsta (s)
+    je zet elke optie in een hashmap samen met de levenshtein
+​[1:37 PM] KUOSMANEN Konsta (s)
+    dan sorteer je de hashmap gebaseerd op de levenshtein
+​[1:37 PM] KUOSMANEN Konsta (s)
+    dan return je de hashmap
+​[1:37 PM] KUOSMANEN Konsta (s)
+    of een vec
+
+ */
+
+//attempt 1 :
+/*fn search_string(query: String, candidates: String, max_distance: usize) String -> Vec<String, usize> {
+    let mut results: Vec<(String, usize)> = Vec::new();
+
+    for candidate in candidates {
+        let distance = levensthein_distance(&query, candidate);
+
+        if distance <= max_distance {
+            results.push((candidate, distance));
+        }
+    }
+
+    results.sort_unstable_by(|a, b| a.1.cmp(&b.1));
+    results.iter().map(|(candidate, _)| *candidate).collect();
+}*/
+
+//attempt 2:
+/*fn search_closest_strings(query: String, candidates: &[&str], max_distance: usize) -> Vec<String> {
+    let mut result: Vec<(String, usize)> = Vec::new();
+
+    for candidate in candidates {
+        let disatnce = levensthein_distance(&query, &candidate);
+
+        if distance <= max_distance {
+            result.push((candidate, &distance));
+        }
+    }
+    result.sort_unstable_by(|a, b| a.1.cmp(&b.1));
+    result.iter().map(|(candidate, _)| *candidate).collect()
+}*/
