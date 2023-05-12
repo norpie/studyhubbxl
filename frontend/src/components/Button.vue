@@ -2,15 +2,14 @@
 export default {
     props: {
         label: String,
+        
     },
 }
 
 </script>
 
 <template>
-    <button  type="button">
-        {{ label }}
-    </button>
+    <button >{{ label }}</button>
 </template>
 
 <style scoped>
