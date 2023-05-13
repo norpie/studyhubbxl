@@ -1,6 +1,10 @@
 use serde::{Deserialize, Serialize};
+<<<<<<< Updated upstream
 use actix_web:: {web, Result, HttpResponse};
 
+=======
+use actix_web:: {web};
+>>>>>>> Stashed changes
 
 #[derive(Debug, Deserialize, Serialize)]
 struct AuthToken{
@@ -9,6 +13,7 @@ struct AuthToken{
 
 //middleware function
 async fn middleware(
+<<<<<<< Updated upstream
     request: actix_web::HttpRequest,
     payload: actix_web::web::Payload,
 ) -> Result<actix_web::HttpResponse, actix_web::Error>{
@@ -35,4 +40,9 @@ async fn middleware(
     }
 
 
+=======
+    req: actix_web::HttpRequest,
+    payload: actix_web::web::Payload,
+){}
+>>>>>>> Stashed changes
 
