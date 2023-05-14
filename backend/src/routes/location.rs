@@ -26,27 +26,30 @@ async fn post_location(query: Query<LocationQuery>, filter: Json<Filter>, reques
     //Check the access token of the user with the ones corresponding to our database (surreal db)
     if let Some(token) = request.headers().get("Authorization"){
            let token = token.to_str().unwrap();
-            if token != "on of our tokens"{
-            return HttpResponse::Unauthorized().body("Invalid token");
+            if token = "on of our tokens"{
+                let response = ApiResponse::new(" ");
+              return HttpResponse::Ok().json(response)
+            
            }else{
-            return HttpResponse::Unauthorized().body("No token available")
+            return HttpResponse::Unauthorized().body("Invalid token/No token")
            }
     }
-    let response = ApiResponse::new(" ");
-    HttpResponse::Ok().json(response)
+   
 }
 
 //Get specific location
 #[get("/location/{id}")]
 async fn get_location(id: Path<Uuid>, request: HttpRequest) -> impl Responder{
-    if let Some(token) = request.headers().get("Authorization"){
+     //Check the access token of the user with the ones corresponding to our database (surreal db)
+     if let Some(token) = request.headers().get("Authorization"){
         let token = token.to_str().unwrap();
-         if token != "on of our tokens"{
-         return HttpResponse::Unauthorized().body("Invalid token");
+         if token = "on of our tokens"{
+             let response = ApiResponse::new(" ");
+           return HttpResponse::Ok().json(response)
+         
         }else{
-         return HttpResponse::Unauthorized().body("No token available")
+         return HttpResponse::Unauthorized().body("Invalid token/No token")
         }
  }
- let response = ApiResponse::new(" ");
- HttpResponse::Ok().json(response)
+
 }
