@@ -1,4 +1,11 @@
-# Student Maps
+# Brussels Student Guide
+Brussels Student Guide is een website, zowel desktop als mobile, waarbij studenten plaatsen kunnen opzoeken die dichtbij hun noden liggen. Deze noden zijn vooral studiegerelateerd maar ook budgetsgewijs. De look van de website zal vergelijkbaar zijn met die van Google Maps.
+
+# Technologieën
+## Backend
+Rust, Serde, Actix Web, SurrealDB
+## Frontend
+Typescript, Vue.js
 
 ## Documentatie Nodige Technologie
 
