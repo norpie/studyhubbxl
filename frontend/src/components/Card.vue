@@ -24,7 +24,7 @@ export default defineComponent({
     align-items: center;
 }
 
-.address-rectangle {
+.card-rectangle {
     width: 100%;
     height: 100%;
     background-color: lightgray;
