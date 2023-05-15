@@ -4,7 +4,7 @@ import Textfield from './components/Textfield.vue';
 </script>
 
 <template>
-    <textfield label="Email"/>
+    <textfield label="Email" placeholder="Enter your email"/>
     <br>
-    <textfield label="Password"/>
+    <textfield label="Password" placeholder="Enter your password"/>
 </template>

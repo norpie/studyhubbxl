@@ -1,11 +1,11 @@
 
 <script lang="ts">
 export default {
-    props: {label:String},
-
-    data() {return{
-        text: 'Enter credentials',
-    }},
+    props: {
+        label:String,
+        id: String,
+        placeholder:String,
+    },
  }
 
 </script>
@@ -13,7 +13,7 @@ export default {
 
 <template>
 <label for="textfield">{{ label }}</label> 
-<input type="text"  class="textfield" v-model="text" />
+<input type="text"  class="textfield" :id="id" :placeholder="placeholder" /> 
 </template>
 
 <style scoped>
