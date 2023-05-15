@@ -15,14 +15,14 @@ export default {
 </script>
 
 <style scoped>
-.address-list-wrapper {
+.list-wrapper {
     height: 330px;
     overflow-y: scroll;
     display: flex;
     justify-content: center;
 }
 
-.address-list {
+.list {
     width: 200px;
     display: flex;
     flex-wrap: wrap;
