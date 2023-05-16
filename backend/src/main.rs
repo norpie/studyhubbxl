@@ -1,18 +1,37 @@
-use actix_web::{get, App, HttpServer, Responder};
+use std::io::Error;
 
-use crate::models::ApiResponse;
+use actix_web::{web::Data, App, HttpServer};
+use surrealdb::{engine::remote::ws::Ws, opt::auth::Root, Surreal};
 
 mod models;
 mod routes;
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    ApiResponse::new("Hello world!")
-}
-
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(hello))
+async fn main() -> Result<(), Error> {
+    //connection to server
+    let result = Surreal::new::<Ws>("localhost:8000").await;
+    if result.is_err() {
+        panic!("No db connection!");
+    }
+    let db = result.unwrap();
+
+    //Sign in as a namespace, database or root user
+    let result = db
+        .signin(Root {
+            username: "root",
+            password: "root",
+        })
+        .await;
+    if let Err(err) = result {
+        panic!("{:#?}", err);
+    }
+
+    //Select specific namespace/database
+    let result = db.use_ns("db").use_db("db").await;
+    if let Err(err) = result {
+        panic!("{:#?}", err);
+    }
+    HttpServer::new(move || App::new().app_data(Data::new(db.clone())))
         .bind(("127.0.0.1", 8080))?
         .run()
         .await
