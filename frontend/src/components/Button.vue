@@ -12,7 +12,6 @@ button {
     padding: 5px 20px 5px 20px;
     border-radius: 10px;
     margin: 5px;
-
 }
 
 button:active {
@@ -20,24 +19,12 @@ button:active {
 
 }
 </style>
+
 <script lang="ts">
 
-import { defineComponent } from "vue";
-
-export default defineComponent({
+export default {
     props: {
         label: String,
-        event: String,
     },
-
-    emits: {
-        click: null,
-    },
-    methods: {
-        submit() {
-            this.$emit('click')
-
-        }
-    }
-})
+}
 </script>
