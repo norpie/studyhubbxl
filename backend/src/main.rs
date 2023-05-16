@@ -4,6 +4,7 @@ use crate::models::ApiResponse;
 
 mod models;
 mod routes;
+mod auth;
 
 #[get("/")]
 async fn hello() -> impl Responder {
