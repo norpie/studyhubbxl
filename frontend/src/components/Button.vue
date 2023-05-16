@@ -27,18 +27,17 @@ import { defineComponent } from "vue";
 export default defineComponent({
     props: {
         label: String,
-        event:String,
+        event: String,
     },
-   
-  emits: {
-    click: null,
-},
-methods:{
-submit(){
-    this.$emit('click')
-    
-}
-}
+
+    emits: {
+        click: null,
+    },
+    methods: {
+        submit() {
+            this.$emit('click')
+
+        }
+    }
 })
 </script>
-
