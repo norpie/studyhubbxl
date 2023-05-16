@@ -1,4 +1,4 @@
-use actix_web::{get, Responder, web::{Query, Json, Path}, post};
+use actix_web::{get, Responder, web::{Query, Json, Path, self, post}, post, Scope};
 use serde::Deserialize;
 use uuid::Uuid;
 
@@ -21,13 +21,17 @@ struct Filter{
 
 
 //Request locations by search or filter or both
-#[post("/locations")]
-async fn post_location(query: Query<LocationQuery>, filter: Json<Filter>) -> impl Responder {
+#[post("/")]
+async fn post_locations(query: Query<LocationQuery>, filter: Json<Filter>) -> impl Responder {
     ApiResponse::new(" ")
 }
 
 //Get specific location
-#[get("/location/{id}")]
+#[get("/{id}")]
 async fn get_location(id: Path<Uuid>) -> impl Responder{
     ApiResponse::new(" ")
+}
+
+pub fn scope() -> Scope {
+    web::scope("/locations").service(get_location).service(post_locations)
 }

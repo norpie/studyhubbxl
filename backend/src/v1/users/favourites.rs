@@ -1,4 +1,4 @@
-use actix_web::{get, Responder, web::Json, post};
+use actix_web::{get, Responder, web::{Json, self}, post, Scope};
 use serde::Deserialize;
 use uuid::Uuid;
 
@@ -17,13 +17,16 @@ struct ListFavourites{
 }
 
 //Request to set location to favourite
-#[post("/user/favourite")]
-async fn post_favorite(id: Json<Favourite>) -> impl Responder{
+#[post("/favourite")]
+async fn post_favourite(id: Json<Favourite>) -> impl Responder{
     ApiResponse::new(" ")
 }
 
 //Get list of favourites
 #[get("/favourites")]
-async fn get_favorites(list_favourites: Json<ListFavourites>) -> impl Responder{
+async fn get_favourites(list_favourites: Json<ListFavourites>) -> impl Responder{
     ApiResponse::new(" ")
+}
+pub fn scope() -> Scope {
+    web::scope("/favourites").service(get_favourites).service(post_favourite)
 }
