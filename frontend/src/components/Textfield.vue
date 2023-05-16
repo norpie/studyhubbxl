@@ -1,31 +1,30 @@
-
 <script lang="ts">
 export default {
     props: {
-        label:String,
+        label: String,
         id: String,
-        placeholder:String,
+        placeholder: String,
     },
- }
-
+}
 </script>
 
 
 <template>
-<label for="textfield">{{ label }}</label> 
-<input type="text"  class="textfield" :id="id" :placeholder="placeholder" /> 
+    <label for="textfield">{{ label }}</label>
+    <input type="text" class="textfield" :id="id" :placeholder="placeholder" />
 </template>
 
 <style scoped>
-label{
+label {
     font-weight: bold;
     width: 100%;
 }
-.textfield{ 
+
+.textfield {
     color: gray;
     border-style: none;
-    background-color:white;
+    background-color: white;
     display: block;
-    
+
 }
 </style>
