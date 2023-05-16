@@ -7,7 +7,7 @@ function test() {
 </script>
 
 <template>
-    <Button label="test" @click="test" />
+    <Button label="test" @click="test"/>
 </template>
 
 <style>

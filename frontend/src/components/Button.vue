@@ -1,5 +1,5 @@
 <template>
-    <button @click="$emit('click')">{{ label }}</button>
+    <button>{{ label }}</button>
 </template>
 
 <style scoped>
