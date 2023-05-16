@@ -1,8 +1,10 @@
-use actix_web::{Scope, web};
+use actix_web::{web, Scope};
 
-mod users;
-mod location;
+use crate::auth::{AuthMiddleware, Request};
+
+pub mod location;
+pub mod users;
 
 pub fn scope() -> Scope {
-    web::scope("/v1").service(users::scope()).service(location::scope())
+    web::scope("/v1")
 }

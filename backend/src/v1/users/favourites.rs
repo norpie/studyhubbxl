@@ -17,13 +17,13 @@ struct ListFavourites{
 }
 
 //Request to set location to favourite
-#[post("/favourite")]
+#[post("/")]
 async fn post_favourite(id: Json<Favourite>) -> impl Responder{
     ApiResponse::new(" ")
 }
 
 //Get list of favourites
-#[get("/favourites")]
+#[get("/")]
 async fn get_favourites(list_favourites: Json<ListFavourites>) -> impl Responder{
     ApiResponse::new(" ")
 }
