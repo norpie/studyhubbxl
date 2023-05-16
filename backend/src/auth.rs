@@ -1,38 +1,39 @@
-use std::future::{ready,Ready};
+use std::future::{ready, Ready};
 
-use actix_web::{dev::{ServiceResponse, ServiceRequest, Transform, Service, forward_ready}, http::Error, rt::net::Ready};
+use actix_web::{
+    dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
+    http::Error,
+};
 
 use futures_util::future::LocalBoxFuture;
 
-
 pub struct Request;
 
-impl <S,B> Transform <Service, ServiceRequest> for Request
-where 
+impl<S, B> Transform<S, ServiceRequest> for Request
+where
     S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
-    S:: Future: 'static,
+    S::Future: 'static,
     B: 'static,
 {
     type Response = ServiceResponse<B>;
     type Error = Error;
-    type Transform = Middleware<S>;
+    type Transform = AuthMiddleware<S>;
     type InitError = ();
-    type Future = Ready<Result<Self::Transform, Self:: InitError>>;
+    type Future = Ready<Result<Self::Transform, Self::InitError>>;
 
-    fn new_transform(&self, service: S) -> Result<Self:: Future, _>{
-        Ok(ready(Ok(Middelware{service})))
+    fn new_transform(&self, service: S) -> Self::Future {
+        ready(Ok(AuthMiddleware { service }))
     }
 }
 
-
-pub struct Middelware<S>{
+pub struct AuthMiddleware<S> {
     service: S,
 }
 
-impl <S,B> Service<ServiceRequest> for Middelware<S>
+impl<S, B> Service<ServiceRequest> for AuthMiddleware<S>
 where
     S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
-    S:: Future: 'static,
+    S::Future: 'static,
     B: 'static,
 {
     type Response = ServiceResponse<B>;
@@ -41,12 +42,12 @@ where
 
     forward_ready!(service);
 
-    fn call(&self, request: ServiceRequest) -> Self::Future{
+    fn call(&self, request: ServiceRequest) -> Self::Future {
         println!("{} ", request.path());
 
         let future = self.service.call(request);
 
-        Box::pin(async move{
+        Box::pin(async move {
             let result = future.await?;
 
             println!("");
