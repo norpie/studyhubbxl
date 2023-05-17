@@ -3,6 +3,7 @@ use std::io::Error;
 use actix_web::{web::Data, App, HttpServer};
 use surrealdb::{engine::remote::ws::Ws, opt::auth::Root, Surreal};
 
+mod search;
 mod models;
 mod routes;
 
