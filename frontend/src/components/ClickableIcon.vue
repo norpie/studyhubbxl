@@ -1,22 +1,11 @@
 <template>
-    <button class="clickable-icon" @click="handleClick">
+    <button class="clickable-icon">
         <slot></slot>
     </button>
 </template>
 
 <script lang="ts">
 export default {
-    name: "ClickableIcon",
-    data() {
-        return {
-            isClicked: false,
-        };
-    },
-    methods: {
-        handleClick() {
-            this.isClicked = !this.isClicked;
-        },
-    },
 };
 </script>
 
