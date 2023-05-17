@@ -17,34 +17,34 @@ use std::{
 use actix_web::web::Query;
 
 fn levensthein_distance(s1: &str, s2: &str) -> usize {
-    let x = s1.len();
-    let y = s2.len();
+    let len1 = s1.len();
+    let len2 = s2.len();
 
-    let mut a: Vec<Vec<usize>> = vec![vec![0; y + 1]; x + 1];
+    let mut distances: Vec<Vec<usize>> = vec![vec![0; len2 + 1]; len1 + 1];
 
-    for i in 0..=x {
-        a[i][0] = i;
+    for i in 0..=len1 {
+        distances[i][0] = i;
     }
-    for j in 0..=y {
-        a[0][j] = j;
+    for j in 0..=len2 {
+        distances[0][j] = j;
     }
 
-    for j in 1..=y {
-        for i in 1..=x {
+    for j in 1..=len2 {
+        for i in 1..=len1 {
             let substitution_cost = if s1.chars().nth(i - 1) == s2.chars().nth(j - 1) {
                 0
             } else {
                 1
             };
 
-            a[i][j] = min(
-                a[i - 1][j] + 1,
-                min(a[i][j - 1] + 1, a[i - 1][j - 1] + substitution_cost),
+            distances[i][j] = min(
+                distances[i - 1][j] + 1,
+                min(distances[i][j - 1] + 1, distances[i - 1][j - 1] + substitution_cost),
             );
         }
     }
 
-    a[x][y]
+    distances[len1][len2]
 }
 
 fn search_closest_strings<'a>(
