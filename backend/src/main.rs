@@ -1,10 +1,11 @@
 use std::io::Error;
 
-use actix_web::{web::Data, App, HttpServer};
+use actix_web::{web::Data, App, HttpServer,web};
 use surrealdb::{engine::remote::ws::Ws, opt::auth::Root, Surreal};
 
 mod models;
 mod routes;
+mod email;
 
 #[actix_web::main]
 async fn main() -> Result<(), Error> {

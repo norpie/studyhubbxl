@@ -1,7 +1,7 @@
 use lettre::{Message, SmtpTransport, Transport, transport::smtp::authentication::Credentials};
 
 
-pub async fn send_email(destination: String, subject: &str, content: &str) -> Result<(), lettre::error::Error>{
+pub async fn send_email(destination: &str, subject: &str, content: &str) -> Result<(), lettre::error::Error>{
 
     //build email
     let email = Message::builder()
