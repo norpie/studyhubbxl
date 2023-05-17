@@ -21,17 +21,17 @@ fn levensthein_distance(s1: &str, s2: &str) -> usize {
     let x = s1.len();
     let y = s2.len();
 
-    let mut a: Vec<Vec<usize>> = vec![vec![0; x + 1]; y + 1];
+    let mut a: Vec<Vec<usize>> = vec![vec![0; y + 1]; x + 1];
 
-    for i in 0..x {
+    for i in 0..=x {
         a[i][0] = i;
     }
-    for j in 0..y {
+    for j in 0..=y {
         a[0][j] = j;
     }
 
-    for i in 1..=x {
-        for j in 1..y {
+    for j in 1..=y {
+        for i in 1..=x {
             let substitution_cost = if s1.chars().nth(i - 1) == s2.chars().nth(j - 1) {
                 0
             } else {
@@ -57,7 +57,7 @@ fn search_closest_strings<'a>(
 ) -> Vec<&'a str> {
     let mut result: Vec<(&str, usize)> = Vec::new();
 
-    for candidate in candidates.iter() {
+    for candidate in candidates {
         let distance = levensthein_distance(query, candidate);
 
         if distance <= max_distance {
@@ -68,6 +68,32 @@ fn search_closest_strings<'a>(
     result.sort_unstable_by_key(|(_, distance)| *distance);
 
     result.iter().map(|(candidate, _)| *candidate).collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::levensthein::{levensthein_distance, search_closest_strings};
+
+    #[test]
+    fn test_levenshtein1() {
+        let result = levensthein_distance("kitten", "sitten");
+        assert_eq!(result, 1);
+    }
+    #[test]
+    fn test_levenshtein2() {
+        let result = levensthein_distance("kitten", "sitting");
+        assert_eq!(result, 3);
+    }
+    #[test]
+    fn test_search_closest_strings() {
+        let result = search_closest_strings("kitten", vec!["kitten", "sitting", "sitten"], 99);
+        assert_eq!(result, vec!["kitten", "sitten", "sitting"]);
+    }
+    #[test]
+    fn test_search_closest_strings2() {
+        let result = search_closest_strings("kitten", vec!["kitten", "sitting", "sitten"], 2);
+        assert_eq!(result, vec!["kitten", "sitten"]);
+    }
 }
 /*
 [1:36 PM] KUOSMANEN Konsta (s)
