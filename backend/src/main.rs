@@ -2,7 +2,7 @@ use actix_web::{get, App, HttpServer, Responder};
 
 use crate::models::ApiResponse;
 
-mod levensthein;
+mod search;
 mod models;
 
 #[get("/")]
