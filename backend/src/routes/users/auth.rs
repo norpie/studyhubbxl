@@ -27,3 +27,4 @@ async fn post_register_user(user: Json<RegisterUser>) -> impl Responder {
 async fn post_login_user(user: Json<LoginUser>) -> impl Responder{
     ApiResponse::new("")
 }
+
