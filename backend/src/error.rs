@@ -14,7 +14,7 @@ pub enum UserError {
     ValidationError { field: String },
     #[display(fmt = "An internal error occurred. Please try again later")]
     InternalError,
-    #[display(fmt = "Wrong password")]
+    #[display(fmt = "Wrong password/username")]
     WrongPasswordOrUsername,
     #[display(fmt = "Too many requests")]
     TooManyRequests,
