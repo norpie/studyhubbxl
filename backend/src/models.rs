@@ -10,7 +10,7 @@ pub struct ApiResponse<T> {
     result: Option<T>,
     #[serde(skip_serializing_if = "Option::is_none")]
     error: Option<String>,
-    status: u8,
+    status: u16,
 }
 
 impl<T: Serialize> ApiResponse<T> {
@@ -24,7 +24,7 @@ impl<T: Serialize> ApiResponse<T> {
     }
 
     /// Wrap error in ApiResponse
-    pub fn error(status: u8, error: String) -> Self {
+    pub fn error(status: u16, error: String) -> Self {
         ApiResponse {
             error: Some(error),
             status,
