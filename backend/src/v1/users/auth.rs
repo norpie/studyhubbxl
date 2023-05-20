@@ -6,7 +6,7 @@ use actix_web::{
 use serde::Deserialize;
 
 use crate::models::ApiResponse;
-use crate::error::MyResult;
+use crate::error::Result;
 
 #[derive(Debug, Deserialize)]
 struct RegisterUser {
@@ -23,14 +23,22 @@ struct LoginUser {
 
 //Request to register user
 #[post("/register")]
-async fn register_user(user: Json<RegisterUser>) -> impl Responder {
-   MyResult::Ok(ApiResponse::new(""))
+async fn register_user(user: Json<RegisterUser>) -> Result<ApiResponse<& 'static str>>{
+    let bool = true;
+    if bool{
+        return Ok(ApiResponse::new(""))
+    }
+    Err(crate::error::UserError::WrongPasswordOrUsername)
 }
 
 //Request to login user
 #[post("/login")]
-async fn login_user(user: Json<LoginUser>) -> impl Responder {
-    MyResult::Ok(ApiResponse::new(""))
+async fn login_user(user: Json<LoginUser>) -> Result<ApiResponse<& 'static str>>{
+    let bool = true;
+    if bool{
+        return Ok(ApiResponse::new(""))
+    }
+    Err(crate::error::UserError::WrongPasswordOrUsername)
     
 }
 
