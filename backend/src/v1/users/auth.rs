@@ -6,6 +6,7 @@ use actix_web::{
 use serde::Deserialize;
 
 use crate::models::ApiResponse;
+use crate::error::MyResult;
 
 #[derive(Debug, Deserialize)]
 struct RegisterUser {
@@ -23,13 +24,14 @@ struct LoginUser {
 //Request to register user
 #[post("/register")]
 async fn register_user(user: Json<RegisterUser>) -> impl Responder {
-    ApiResponse::new("")
+   MyResult::Ok(ApiResponse::new(""))
 }
 
 //Request to login user
 #[post("/login")]
 async fn login_user(user: Json<LoginUser>) -> impl Responder {
-    ApiResponse::new("")
+    MyResult::Ok(ApiResponse::new(""))
+    
 }
 
 pub fn scope() -> Scope {

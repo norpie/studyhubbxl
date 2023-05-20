@@ -7,6 +7,7 @@ use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::models::ApiResponse;
+use crate::error::MyResult;
 
 #[derive(Debug, Deserialize)]
 struct LocationQuery {
@@ -26,13 +27,13 @@ struct Filter {
 //Request locations by search or filter or both
 #[post("/")]
 async fn filter_search_locations(query: Query<LocationQuery>, filter: Json<Filter>) -> impl Responder {
-    ApiResponse::new(" ")
+    MyResult::Ok(ApiResponse::new(" "))
 }
 
 //Get specific location
 #[get("/{id}")]
 async fn get_location(id: Path<Uuid>) -> impl Responder {
-    ApiResponse::new(" ")
+    MyResult::Ok(ApiResponse::new(" "))
 }
 
 pub fn scope() -> Scope {
@@ -40,3 +41,4 @@ pub fn scope() -> Scope {
         .service(get_location)
         .service(filter_search_locations)
 }
+

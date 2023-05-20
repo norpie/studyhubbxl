@@ -7,6 +7,7 @@ use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::models::ApiResponse;
+use crate::error::MyResult;
 
 #[derive(Debug, Deserialize)]
 struct Favourite {
@@ -23,13 +24,13 @@ struct ListFavourites {
 //Request to set location to favourite
 #[post("/")]
 async fn new_favourite(id: Json<Favourite>) -> impl Responder {
-    ApiResponse::new(" ")
+    MyResult::Ok(ApiResponse::new(" "))
 }
 
 //Get list of favourites
 #[get("/")]
 async fn get_favourites(list_favourites: Json<ListFavourites>) -> impl Responder {
-    ApiResponse::new(" ")
+    MyResult::Ok(ApiResponse::new(" "))
 }
 
 pub fn scope() -> Scope {

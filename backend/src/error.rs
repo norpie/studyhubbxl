@@ -66,4 +66,4 @@ impl Responder for UserError {
     //}
 
 }
- pub type ResultWithError<T> = Result<ApiResponse<T>, UserError>;
+ pub type MyResult<T> = Result<ApiResponse<T>, UserError>;
