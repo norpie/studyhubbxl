@@ -9,6 +9,7 @@ use surrealdb::{engine::remote::ws::Ws, opt::auth::Root, Surreal};
 mod models;
 mod search;
 mod v1;
+mod error;
 
 #[actix_web::main]
 async fn main() -> Result<(), Error> {
