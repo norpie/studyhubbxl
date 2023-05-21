@@ -1,5 +1,4 @@
 use std::io::Error;
-
 use actix_web::{
     web::{self, Data},
     App, HttpServer,
