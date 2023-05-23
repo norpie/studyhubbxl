@@ -1,12 +1,13 @@
 use actix_web::{
     get, post,
-    web::{Json, Path, Query, self}, Scope,
+    web::{self, Json, Path, Query},
+    Scope,
 };
 use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::models::ApiResponse;
-use crate::error::Result;
+use crate::{error::Result, models::Location};
 
 #[derive(Debug, Deserialize)]
 struct LocationQuery {
@@ -25,22 +26,17 @@ struct Filter {
 
 //Request locations by search or filter or both
 #[post("/")]
-async fn filter_search_locations(query: Query<LocationQuery>, filter: Json<Filter>) -> Result<ApiResponse<& 'static str>> {
-    let bool = true;
-    if bool{
-        return Ok(ApiResponse::new(""))
-    }
-    Err(crate::error::UserError::TooManyRequests)
-    }
+async fn filter_search_locations(
+    query: Query<LocationQuery>,
+    filter: Json<Filter>,
+) -> Result<ApiResponse<Vec<Location>>> {
+    return Ok(ApiResponse::new(Vec::new()));
+}
 
 //Get specific location
 #[get("/{id}")]
-async fn get_location(id: Path<Uuid>) -> Result<ApiResponse<& 'static str>> {
-    let bool = true;
-    if bool{
-        return Ok(ApiResponse::new(""))
-    }
-    Err(crate::error::UserError::TooManyRequests)
+async fn get_location(id: Path<Uuid>) -> Result<ApiResponse<Option<Location>>> {
+    Ok(ApiResponse::new(None))
 }
 
 pub fn scope() -> Scope {
