@@ -69,21 +69,21 @@ pub struct User {
 pub struct LocationType {
     id: Uuid,
     path: String,
-    display_name: String
+    display_name: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Attribute {
     id: Uuid,
     path: String,
-    display_name: String
+    display_name: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Noise {
     id: Uuid,
     path: String,
-    display_name: String
+    display_name: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -94,6 +94,21 @@ pub struct Location {
     pub attributes: Vec<String>,
     pub noise: String,
     pub address: String,
+    pub coordinates: Vec<Decimal>,
+}
+
+impl Location {
+    pub fn coords(&self) -> Coordinates {
+        Coordinates {
+            identifier: self.identifier,
+            coordinates: self.coordinates.clone(),
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Coordinates {
+    pub identifier: Uuid,
     pub coordinates: Vec<Decimal>,
 }
 
