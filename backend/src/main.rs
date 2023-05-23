@@ -37,13 +37,9 @@ async fn main() -> Result<(), Error> {
     }
 
     HttpServer::new(move || {
-        App::new().app_data(Data::new(db.clone())).service(
-            web::scope("/api").service(
-                web::scope("/v1")
-                    .service(v1::public())
-                    .service(v1::private())
-            ),
-        )
+        App::new()
+            .app_data(Data::new(db.clone()))
+            .service(web::scope("/api").service(web::scope("/v1").service(v1::scope())))
     })
     .bind(("127.0.0.1", 8080))?
     .run()
