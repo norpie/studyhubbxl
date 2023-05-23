@@ -42,8 +42,11 @@ async fn new_favourite(
 //Get list of favourites
 #[get("")]
 async fn get_favourites(
+    db: Data<Surreal<Client>>,
     list_favourites: Path<ListFavourites>,
+    req: HttpRequest,
 ) -> Result<ApiResponse<&'static str>> {
+    let id = super::parse_id(req)?;
     Err(crate::error::UserError::InternalError)
 }
 
