@@ -1,4 +1,8 @@
-use actix_web::{body::BoxBody, http::header::ContentType, HttpResponse, Responder};
+use actix_web::{
+    body::BoxBody,
+    http::{header::ContentType, StatusCode},
+    HttpResponse, HttpResponseBuilder, Responder,
+};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -10,6 +14,7 @@ pub struct ApiResponse<T> {
     result: Option<T>,
     #[serde(skip_serializing_if = "Option::is_none")]
     error: Option<String>,
+    #[serde(skip_serializing)]
     status: u16,
 }
 
@@ -38,7 +43,7 @@ impl<T: Serialize> Responder for ApiResponse<T> {
     fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
         let result = serde_json::to_string(&self);
         match result {
-            Ok(json) => HttpResponse::Ok()
+            Ok(json) => HttpResponseBuilder::new(StatusCode::from_u16(self.status).unwrap())
                 .insert_header(("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .content_type(ContentType::json())
                 .body(json),
