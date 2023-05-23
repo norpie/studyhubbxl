@@ -5,6 +5,7 @@ use actix_web::{
 };
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
+use surrealdb::sql::Thing;
 use uuid::Uuid;
 
 /// Wrapper for every response made by the backend
@@ -87,13 +88,13 @@ pub struct Noise {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Location {
-    id: Uuid,
-    name: String,
-    location_type: String,
-    attributes: Vec<String>,
-    noise: String,
-    address: String,
-    coordinates: (Decimal, Decimal),
+    pub identifier: Uuid,
+    pub name: String,
+    pub location_type: String,
+    pub attributes: Vec<String>,
+    pub noise: String,
+    pub address: String,
+    pub coordinates: Vec<Decimal>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
