@@ -51,7 +51,7 @@ impl<T: Serialize> Responder for ApiResponse<T> {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct User {
+pub struct User {
     id: Uuid,
     email: String,
     username: String,
@@ -83,7 +83,7 @@ enum Noise {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Location {
+pub struct Location {
     id: Uuid,
     name: String,
     location_type: LocationType,
@@ -94,7 +94,7 @@ struct Location {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Favourite {
+pub struct Favourite {
     id: Uuid,
     location_id: Uuid,
     user_id: Uuid,
