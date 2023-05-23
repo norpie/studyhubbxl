@@ -43,7 +43,6 @@ async fn main() -> Result<(), Error> {
                 web::scope("/v1")
                     .service(v1::private())
                     .service(v1::public())
-                    .wrap(RateLimiter {}),
             ),
         )
     })
