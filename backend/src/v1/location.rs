@@ -1,13 +1,14 @@
 use actix_web::{
     get, post,
-    web::{self, Json, Path, Query},
+    web::{self, Data, Json, Path, Query},
     Scope,
 };
 use serde::Deserialize;
+use surrealdb::{engine::remote::ws::Client, Surreal};
 use uuid::Uuid;
 
-use crate::models::ApiResponse;
 use crate::{error::Result, models::Location};
+use crate::{error::UserError, models::ApiResponse};
 
 #[derive(Debug, Deserialize)]
 struct LocationQuery {
@@ -35,8 +36,24 @@ async fn filter_search_locations(
 
 //Get specific location
 #[get("/{id}")]
-async fn get_location(id: Path<Uuid>) -> Result<ApiResponse<Option<Location>>> {
-    Ok(ApiResponse::new(None))
+async fn get_location(
+    db: Data<Surreal<Client>>,
+    id: Path<Uuid>,
+) -> Result<ApiResponse<Option<Location>>> {
+    let query_result = db
+        .query("SELECT * FROM location WHERE '$id'")
+        .bind(("$id", id.to_string()))
+        .await;
+    match query_result {
+        Ok(mut response) => {
+            let parse_result = response.take(0);
+            match parse_result {
+                Ok(location) => Ok(ApiResponse::new(location)),
+                Err(err) => Err(UserError::InternalError),
+            }
+        }
+        Err(err) => Err(UserError::InternalError),
+    }
 }
 
 pub fn scope() -> Scope {
