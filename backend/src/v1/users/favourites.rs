@@ -21,11 +21,22 @@ struct ListFavourites {
 #[post("/{id}")]
 async fn new_favourite(
     db: Data<Surreal<Client>>,
-    id: Path<Uuid>,
+    location_id: Path<Uuid>,
     req: HttpRequest,
 ) -> Result<ApiResponse<&'static str>> {
-    let id = super::parse_id(req);
-    Err(crate::error::UserError::InternalError)
+    let id = super::parse_id(req)?;
+    let query_result = db
+        .query("CREATE favourite CONTENT { user_id: $user_id,  location_id: $location_id }")
+        .bind(("user_id", id.to_string()))
+        .bind(("location_id", location_id.to_string()))
+        .await;
+    match query_result {
+        Ok(response) => Ok(ApiResponse::new("")),
+        Err(err) => {
+            println!("error outer: {:#?}", err);
+            Err(crate::error::UserError::InternalError)
+        }
+    }
 }
 
 //Get list of favourites
