@@ -1,13 +1,13 @@
 use actix_web::{
     get, post,
-    web::{self, Json},
-    Responder, Scope,
+    web::{self, Json, Path},
+    Scope,
 };
 use serde::Deserialize;
 use uuid::Uuid;
 
-use crate::models::ApiResponse;
 use crate::error::Result;
+use crate::models::ApiResponse;
 
 #[derive(Debug, Deserialize)]
 struct Favourite {
@@ -16,28 +16,22 @@ struct Favourite {
 
 #[derive(Debug, Deserialize)]
 struct ListFavourites {
-    top: Option<u8>,
-    skip: Option<u8>,
+    limit: Option<u8>,
+    start: Option<u8>,
     coordinates_only: Option<bool>,
 }
 
 //Request to set location to favourite
-#[post("/")]
-async fn new_favourite(id: Json<Favourite>) -> Result<ApiResponse<& 'static str>> {
-    let bool = true;
-    if bool{
-        return Ok(ApiResponse::new(""))
-    }
+#[post("")]
+async fn new_favourite(id: Json<Favourite>) -> Result<ApiResponse<&'static str>> {
     Err(crate::error::UserError::InternalError)
 }
 
 //Get list of favourites
-#[get("/")]
-async fn get_favourites(list_favourites: Json<ListFavourites>) -> Result<ApiResponse<& 'static str>> {
-    let bool = true;
-    if bool{
-        return Ok(ApiResponse::new(""))
-    }
+#[get("")]
+async fn get_favourites(
+    list_favourites: Path<ListFavourites>,
+) -> Result<ApiResponse<&'static str>> {
     Err(crate::error::UserError::InternalError)
 }
 
