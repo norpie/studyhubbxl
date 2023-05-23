@@ -45,9 +45,15 @@ async fn filter_search_locations(
     } else {
         20
     };
-    let sql = "SELECT * FROM location WHERE noise IN $noise AND attributes CONTAINSALL $attributes AND location_type IN $location_types LIMIT $limit START $start";
+    let search_string = if let Some(search) = &search.search {
+        search.clone()
+    } else {
+        "".to_string()
+    };
+    let sql = "SELECT * FROM location WHERE noise IN $noise AND attributes CONTAINSALL $attributes AND location_type IN $location_types AND name ~ $search LIMIT $limit START $start";
     let mut query = db.query(sql);
     query = query.bind(("noise", &filter.noise));
+    query = query.bind(("search", &search_string));
     query = query.bind(("attributes", &filter.attributes));
     query = query.bind(("location_types", &filter.location_types));
     query = query.bind(("start", start));
@@ -58,7 +64,6 @@ async fn filter_search_locations(
             let parse_result: surrealdb::Result<Vec<Location>> = response.take(0);
             match parse_result {
                 Ok(locations) => {
-                    // TODO: impl search with levenshtein
                     if search.coordinates_only.is_some() && search.coordinates_only.unwrap() {
                         let mut coords = Vec::new();
                         for location in locations {
