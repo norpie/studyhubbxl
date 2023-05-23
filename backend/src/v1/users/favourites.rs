@@ -10,11 +10,6 @@ use crate::error::Result;
 use crate::models::ApiResponse;
 
 #[derive(Debug, Deserialize)]
-struct Favourite {
-    id: Uuid,
-}
-
-#[derive(Debug, Deserialize)]
 struct ListFavourites {
     limit: Option<u8>,
     start: Option<u8>,
@@ -22,8 +17,8 @@ struct ListFavourites {
 }
 
 //Request to set location to favourite
-#[post("")]
-async fn new_favourite(id: Json<Favourite>) -> Result<ApiResponse<&'static str>> {
+#[post("/{id}")]
+async fn new_favourite(id: Path<Uuid>) -> Result<ApiResponse<&'static str>> {
     Err(crate::error::UserError::InternalError)
 }
 
