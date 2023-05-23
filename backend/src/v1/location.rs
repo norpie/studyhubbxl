@@ -10,7 +10,7 @@ use crate::error::Result;
 
 #[derive(Debug, Deserialize)]
 struct LocationQuery {
-    search: String,
+    search: Option<String>,
     top: Option<u8>,
     skip: Option<u8>,
     coordinates_only: Option<bool>,
@@ -48,4 +48,3 @@ pub fn scope() -> Scope {
         .service(get_location)
         .service(filter_search_locations)
 }
-
