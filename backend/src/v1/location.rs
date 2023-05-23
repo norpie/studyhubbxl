@@ -28,6 +28,7 @@ struct Filter {
 //Request locations by search or filter or both
 #[post("/")]
 async fn filter_search_locations(
+    db: Data<Surreal<Client>>,
     query: Query<LocationQuery>,
     filter: Json<Filter>,
 ) -> Result<ApiResponse<Vec<Location>>> {
