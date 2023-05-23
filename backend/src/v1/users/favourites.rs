@@ -1,5 +1,5 @@
 use actix_web::{
-    get, post,
+    delete, get, post,
     web::{self, Data, Path, Query},
     Either, HttpRequest, Scope,
 };
@@ -30,6 +30,27 @@ async fn new_favourite(
     let id = super::parse_id(req)?;
     let query_result = db
         .query("CREATE favourite CONTENT { user_id: $user_id,  location_id: $location_id }")
+        .bind(("user_id", id.to_string()))
+        .bind(("location_id", location_id.to_string()))
+        .await;
+    match query_result {
+        Ok(_) => Ok(ApiResponse::new("")),
+        Err(err) => {
+            println!("error outer: {:#?}", err);
+            Err(crate::error::UserError::InternalError)
+        }
+    }
+}
+
+#[delete("/{id}")]
+async fn del_favourite(
+    db: Data<Surreal<Client>>,
+    location_id: Path<Uuid>,
+    req: HttpRequest,
+) -> Result<ApiResponse<&'static str>> {
+    let id = super::parse_id(req)?;
+    let query_result = db
+        .query("DELETE favourite WHERE user_id = $user_id AND location_id = $location_id;")
         .bind(("user_id", id.to_string()))
         .bind(("location_id", location_id.to_string()))
         .await;
@@ -97,5 +118,6 @@ async fn get_favourites(
 pub fn scope() -> Scope {
     web::scope("/favourites")
         .service(get_favourites)
+        .service(del_favourite)
         .service(new_favourite)
 }
