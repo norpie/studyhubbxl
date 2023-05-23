@@ -11,7 +11,7 @@ use crate::{error::Result, models::Location};
 use crate::{error::UserError, models::ApiResponse};
 
 #[derive(Debug, Deserialize)]
-struct LocationQuery {
+struct Search {
     search: Option<String>,
     top: Option<u8>,
     skip: Option<u8>,
@@ -29,9 +29,10 @@ struct Filter {
 #[post("/")]
 async fn filter_search_locations(
     db: Data<Surreal<Client>>,
-    query: Query<LocationQuery>,
+    search: Query<Search>,
     filter: Json<Filter>,
 ) -> Result<ApiResponse<Vec<Location>>> {
+    let query = db.query("");
     return Ok(ApiResponse::new(Vec::new()));
 }
 
