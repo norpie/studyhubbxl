@@ -65,35 +65,33 @@ pub struct User {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum LocationType {
-    Cafe,
-    Library,
-    StudySpace,
-    Campus,
+pub struct LocationType {
+    id: Uuid,
+    path: String,
+    display_name: String
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum Attribute {
-    Sockets,
-    Wifi,
-    CoWorking,
+pub struct Attribute {
+    id: Uuid,
+    path: String,
+    display_name: String
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum Noise {
-    Noisy,
-    Moderate,
-    Quiet,
-    Silent,
+pub struct Noise {
+    id: Uuid,
+    path: String,
+    display_name: String
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Location {
     id: Uuid,
     name: String,
-    location_type: LocationType,
-    attributes: Vec<Attribute>,
-    noise: Noise,
+    location_type: String,
+    attributes: Vec<String>,
+    noise: String,
     address: String,
     coordinates: (Decimal, Decimal),
 }
