@@ -1,6 +1,6 @@
 use actix_web::{
     get, post,
-    web::{self, Json, Path},
+    web::{self, Path},
     Scope,
 };
 use serde::Deserialize;
