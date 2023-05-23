@@ -1,14 +1,17 @@
 use actix_web::{
     get, post,
-    web::{self, Data, Path},
-    HttpRequest, Scope,
+    web::{self, Data, Path, Query},
+    Either, HttpRequest, Scope,
 };
 use serde::Deserialize;
 use surrealdb::{engine::remote::ws::Client, Surreal};
 use uuid::Uuid;
 
-use crate::error::Result;
-use crate::models::ApiResponse;
+use crate::models::{ApiResponse, Coordinates};
+use crate::{
+    error::{Result, UserError},
+    models::Location,
+};
 
 #[derive(Debug, Deserialize)]
 struct ListFavourites {
@@ -31,7 +34,7 @@ async fn new_favourite(
         .bind(("location_id", location_id.to_string()))
         .await;
     match query_result {
-        Ok(response) => Ok(ApiResponse::new("")),
+        Ok(_) => Ok(ApiResponse::new("")),
         Err(err) => {
             println!("error outer: {:#?}", err);
             Err(crate::error::UserError::InternalError)
@@ -43,11 +46,52 @@ async fn new_favourite(
 #[get("")]
 async fn get_favourites(
     db: Data<Surreal<Client>>,
-    list_favourites: Path<ListFavourites>,
+    query: Query<ListFavourites>,
     req: HttpRequest,
-) -> Result<ApiResponse<&'static str>> {
+) -> Result<Either<ApiResponse<Vec<Location>>, ApiResponse<Vec<Coordinates>>>> {
     let id = super::parse_id(req)?;
-    Err(crate::error::UserError::InternalError)
+    let limit = if let Some(limit) = query.limit {
+        limit
+    } else {
+        20
+    };
+    let start = if let Some(start) = query.start {
+        start
+    } else {
+        0
+    };
+    let query_result = db
+        .query("SELECT identifier, name, coordinates, address, attributes, location_type, noise FROM (SELECT *, (SELECT * FROM favourite WHERE user_id = $user_id LIMIT $limit START $start) as favourite FROM location SPLIT favourite) WHERE favourite.location_id = identifier;")
+        .bind(("user_id", id.to_string()))
+        .bind(("limit", limit))
+        .bind(("start", start))
+        .await;
+    match query_result {
+        Ok(mut response) => {
+            let parse_result: surrealdb::Result<Vec<Location>> = response.take(0);
+            match parse_result {
+                Ok(locations) => {
+                    if query.coordinates_only.is_some() && query.coordinates_only.unwrap() {
+                        let mut coords = Vec::new();
+                        for location in locations {
+                            coords.push(location.coords());
+                        }
+                        Ok(Either::Right(ApiResponse::new(coords)))
+                    } else {
+                        Ok(Either::Left(ApiResponse::new(locations)))
+                    }
+                }
+                Err(err) => {
+                    println!("error inner: {:#?}", err);
+                    Err(UserError::InternalError)
+                }
+            }
+        }
+        Err(err) => {
+            println!("error outer: {:#?}", err);
+            Err(UserError::InternalError)
+        }
+    }
 }
 
 pub fn scope() -> Scope {
