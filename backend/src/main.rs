@@ -9,6 +9,7 @@ use surrealdb::{engine::remote::ws::Ws, opt::auth::Root, Surreal};
 
 mod limiter;
 mod models;
+mod error;
 mod v1;
 
 #[actix_web::main]

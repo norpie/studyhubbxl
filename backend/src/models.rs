@@ -7,7 +7,7 @@ use uuid::Uuid;
 #[derive(Debug, Clone, Serialize)]
 pub struct ApiResponse<T> {
     result: Option<T>,
-    status: u8,
+    status: u16,
     error: String,
 }
 
@@ -22,7 +22,7 @@ impl<T: Serialize> ApiResponse<T> {
     }
 
     /// Wrap error in ApiResponse
-    pub fn error(status: u8, error: String) -> Self {
+    pub fn error(status: u16, error: String) -> Self {
         ApiResponse {
             result: None,
             status,
