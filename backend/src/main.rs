@@ -1,14 +1,14 @@
-use std::io::Error;
 use actix_web::{
     web::{self, Data},
     App, HttpServer,
 };
+use std::io::Error;
 use surrealdb::{engine::remote::ws::Ws, opt::auth::Root, Surreal};
 
+mod error;
 mod models;
 mod search;
 mod v1;
-mod error;
 
 #[actix_web::main]
 async fn main() -> Result<(), Error> {
@@ -36,14 +36,16 @@ async fn main() -> Result<(), Error> {
         panic!("{:#?}", err);
     }
     HttpServer::new(move || {
-        App::new().app_data(Data::new(db.clone())).service(
-            web::scope("/api").service(
-                web::scope("/v1")
-                    .service(web::scope("").service(v1::private()))
-                    .service(web::scope("").service(v1::public())),
-            ),
-        )
-    })
+        App::new()
+            .app_data(Data::new(db.clone()))
+            .service(
+                web::scope("/api").service(
+                    web::scope("/v1")
+                        .service(v1::private())
+                        .service(v1::public()),
+                ),
+            )
+        })
     .bind(("127.0.0.1", 8080))?
     .run()
     .await
