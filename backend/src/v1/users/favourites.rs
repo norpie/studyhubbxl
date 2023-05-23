@@ -1,9 +1,10 @@
 use actix_web::{
     get, post,
-    web::{self, Path},
-    Scope,
+    web::{self, Data, Path},
+    HttpRequest, Scope,
 };
 use serde::Deserialize;
+use surrealdb::{engine::remote::ws::Client, Surreal};
 use uuid::Uuid;
 
 use crate::error::Result;
@@ -18,7 +19,12 @@ struct ListFavourites {
 
 //Request to set location to favourite
 #[post("/{id}")]
-async fn new_favourite(id: Path<Uuid>) -> Result<ApiResponse<&'static str>> {
+async fn new_favourite(
+    db: Data<Surreal<Client>>,
+    id: Path<Uuid>,
+    req: HttpRequest,
+) -> Result<ApiResponse<&'static str>> {
+    let id = super::parse_id(req);
     Err(crate::error::UserError::InternalError)
 }
 
