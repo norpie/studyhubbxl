@@ -1,14 +1,18 @@
 use std::future::{ready, Ready};
+use std::net;
 
 use actix_web::rt::time::Instant;
 use actix_web::{
     dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
-    Error, Responder,
+    
 };
+use surrealdb::Surreal;
+use surrealdb::engine::remote::ws::Client;
+use std::collections::HashMap;
 use chrono::Duration;
 use futures_util::future::LocalBoxFuture;
-
 use crate::error::UserError;
+
 
 pub struct RateLimiter {
     max_requests: u32,
@@ -27,7 +31,7 @@ impl RateLimiter {
 struct FixedWindowRateLimiter {
     max_requests: u32,
     duration: Duration,
-    requests: u32,
+    user_requests: HashMap<Option<net::SocketAddr>, u32>,
     start: Instant,
 }
 
@@ -36,31 +40,32 @@ impl FixedWindowRateLimiter {
         FixedWindowRateLimiter {
             max_requests: 100,
             duration: Duration { secs: 10, nanos: 0 },
-            requests: 0,
+            user_requests: HashMap::new(),
             start: Instant::now(),
         }
     }
 
-    pub fn is_allowed(&mut self) -> bool {
+    pub fn is_allowed(&mut self, user_ip: Option<net::SocketAddr>) -> bool {
         let now = Instant::now();
         let elapsed = now.duration_since(self.start);
         if elapsed > self.duration.to_std().unwrap() {
-            self.requests = 0;
+            self.user_requests.clear();
             self.start = now;
         }
-
-        self.requests += 1;
-        self.requests <= self.max_requests
+        let requests = self.user_requests.entry(user_ip).or_insert(0);
+        *requests += 1;
+        *requests <= self.max_requests
     }
 }
+
 impl<S, B> Transform<S, ServiceRequest> for RateLimiter
 where
-    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = UserError>,
     S::Future: 'static,
     B: 'static,
 {
     type Response = ServiceResponse<B>;
-    type Error = Error;
+    type Error = UserError;
     type Transform = RateLimiterMiddleware<S>;
     type InitError = ();
     type Future = Ready<Result<Self::Transform, Self::InitError>>;
@@ -80,19 +85,21 @@ pub struct RateLimiterMiddleware<S> {
 
 impl<S, B> Service<ServiceRequest> for RateLimiterMiddleware<S>
 where
-    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = UserError>,
     S::Future: 'static,
     B: 'static,
 {
     type Response = ServiceResponse<B>;
-    type Error = Error;
+    type Error = UserError;
     type Future = LocalBoxFuture<'static, Result<Self::Response, Self::Error>>;
 
     forward_ready!(service);
 
     fn call(&self, request: ServiceRequest) -> Self::Future {
         println!("{} ", request.path());
-        let is_allowed = self.rate_limiter.is_allowed();
+        let user_ip = request.peer_addr();
+        let db = request.app_data::<Surreal<Client>>().unwrap();
+        let is_allowed = self.rate_limiter.is_allowed(user_ip);
         if is_allowed {
             let future = self.service.call(request);
             Box::pin(async move {
@@ -100,8 +107,11 @@ where
                 Ok(result)
             })
         } else {
+            //let response = UserError::TooManyRequests.respond_to(&request)?;
+            //let parts = request.into_parts();
             Box::pin(async {
-                Ok(request.into_response(UserError::TooManyRequests.respond_to(request)))
+                //Ok(ServiceResponse::new(parts.0, response.into()).map_err(Error::from))
+                Err(UserError::TooManyRequests)
             })
         }
     }
