@@ -8,7 +8,6 @@ use actix_web::{
 };
 use surrealdb::Surreal;
 use surrealdb::engine::remote::ws::Client;
-use std::collections::HashMap;
 use chrono::Duration;
 use futures_util::future::LocalBoxFuture;
 use crate::error::UserError;
@@ -31,7 +30,7 @@ impl RateLimiter {
 struct FixedWindowRateLimiter {
     max_requests: u32,
     duration: Duration,
-    user_requests: HashMap<Option<net::SocketAddr>, u32>,
+    db: Surreal<Client>,
     start: Instant,
 }
 
@@ -40,21 +39,15 @@ impl FixedWindowRateLimiter {
         FixedWindowRateLimiter {
             max_requests: 100,
             duration: Duration { secs: 10, nanos: 0 },
-            user_requests: HashMap::new(),
+            db,
             start: Instant::now(),
         }
     }
 
-    pub fn is_allowed(&mut self, user_ip: Option<net::SocketAddr>) -> bool {
+    pub async fn is_allowed(&mut self, user_ip: Option<net::SocketAddr>) -> bool{
         let now = Instant::now();
         let elapsed = now.duration_since(self.start);
-        if elapsed > self.duration.to_std().unwrap() {
-            self.user_requests.clear();
-            self.start = now;
-        }
-        let requests = self.user_requests.entry(user_ip).or_insert(0);
-        *requests += 1;
-        *requests <= self.max_requests
+        
     }
 }
 
@@ -97,9 +90,20 @@ where
 
     fn call(&self, request: ServiceRequest) -> Self::Future {
         println!("{} ", request.path());
+        pub fn is_allowed(&mut self, user_ip: Option<net::SocketAddr>) -> bool {
+            let now = Instant::now();
+            let elapsed = now.duration_since(self.start);
+            if elapsed > self.duration.to_std().unwrap() {
+                self.user_requests.clear();
+                self.start = now;
+            }
+            let requests = self.user_requests.entry(user_ip).or_insert(0);
+            *requests += 1;
+            *requests <= self.max_requests
+        }
         let user_ip = request.peer_addr();
         let db = request.app_data::<Surreal<Client>>().unwrap();
-        let is_allowed = self.rate_limiter.is_allowed(user_ip);
+        let is_allowed = false;
         if is_allowed {
             let future = self.service.call(request);
             Box::pin(async move {

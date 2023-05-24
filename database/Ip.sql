@@ -1,4 +1,4 @@
 DEFINE TABLE ip SCHEMAFULL;
 DEFINE FIELD user_ip ON TABLE ip TYPE string ASSERT $value != NONE;
-DEFINE FIELD start ON TABLE ip TYPE u32 ASSERT $value != NONE;
-DEFINE FIELD request_id ON TABLE ip TYPE u8 ASSERT $value != NONE;
+DEFINE FIELD window_start ON TABLE ip TYPE string ASSERT $value != NONE;
+DEFINE FIELD requests ON TABLE ip TYPE int ASSERT $value != NONE;
