@@ -74,7 +74,6 @@ pub struct LocationType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Attribute {
-    id: Uuid,
     path: String,
     display_name: String,
 }
