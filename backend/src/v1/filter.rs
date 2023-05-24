@@ -1,6 +1,6 @@
 use actix_web::{
     get,
-    web::{self, Data},
+    web::{self, Data, Path},
     Scope,
 };
 use surrealdb::{engine::remote::ws::Client, Surreal};
@@ -10,8 +10,11 @@ use crate::{
     models::ApiResponse,
 };
 
-#[get("")]
-async fn get_filters(db: Data<Surreal<Client>>) -> Result<ApiResponse<Vec<String>>> {
+#[get("/{filter_type}")]
+async fn get_filters(
+    db: Data<Surreal<Client>>,
+    filter_type: Path<String>,
+) -> Result<ApiResponse<Vec<String>>> {
     Err(UserError::InternalError)
 }
 
