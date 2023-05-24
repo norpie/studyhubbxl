@@ -1,5 +1,3 @@
-use std::collections::hash_map::IntoIter;
-
 use actix_web::{
     get,
     web::{self, Data, Path},
