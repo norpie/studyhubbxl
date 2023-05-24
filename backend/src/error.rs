@@ -18,6 +18,8 @@ pub enum UserError {
     WrongPasswordOrUsername,
     #[display(fmt = "Too many requests")]
     TooManyRequests,
+    #[display(fmt = "There is not method for this input.")]
+    Unimplemented,
 }
 
 impl error::ResponseError for UserError {
@@ -33,6 +35,7 @@ impl error::ResponseError for UserError {
             UserError::InternalError => StatusCode::INTERNAL_SERVER_ERROR,
             UserError::WrongPasswordOrUsername => StatusCode::UNAUTHORIZED,
             UserError::TooManyRequests => StatusCode::TOO_MANY_REQUESTS,
+            UserError::Unimplemented => StatusCode::NOT_IMPLEMENTED,
         }
     }
 }
@@ -64,6 +67,5 @@ impl Responder for UserError {
     //        }
     //    }
     //}
-
 }
- pub type Result<T> = std::result::Result<T, UserError>;
+pub type Result<T> = std::result::Result<T, UserError>;
