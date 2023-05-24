@@ -66,21 +66,7 @@ pub struct User {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct LocationType {
-    id: Uuid,
-    path: String,
-    display_name: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Attribute {
-    path: String,
-    display_name: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Noise {
-    id: Uuid,
+pub struct FilterItem {
     path: String,
     display_name: String,
 }
