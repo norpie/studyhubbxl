@@ -35,7 +35,7 @@ struct FixedWindowRateLimiter {
 }
 
 impl FixedWindowRateLimiter {
-    pub fn new(max_requests: u32, duration: Duration) -> Self {
+    pub fn new(max_requests: u32, duration: Duration, db: Surreal<Client>) -> Self {
         FixedWindowRateLimiter {
             max_requests: 100,
             duration: Duration { secs: 10, nanos: 0 },
@@ -47,9 +47,47 @@ impl FixedWindowRateLimiter {
     pub async fn is_allowed(&mut self, user_ip: Option<net::SocketAddr>) -> bool{
         let now = Instant::now();
         let elapsed = now.duration_since(self.start);
-        
+        if elapsed > self.duration.to_std().unwrap(){
+            self.window_reset().await;
+        }
+    
+        //Check if the amount of requests is allowed
+        let total_request = self.db.query(
+            "SELECT COUNT(*) FROM ip WHERE user_ip = ? AND window_start = ?",
+            &[&user_ip, &self.start.to_string()],
+        ).await;
+    
+        if let Ok(rows) = total_request {
+            if let Some(row) = rows.get(0){
+                if let Some(count) = row.get(0){
+                    let requests: u32 = count;
+                    return requests <= self.max_requests;
+                }
+            }
+        }
+        false
+    }
+
+    async fn window_reset(&mut self){
+        //Start time reset
+        self.start = Instant::now();
+        //Clear total_request for next window
+        self.db.query(
+            "DELETE FROM ip WHERE window_start = ?",
+            &[&self.start.to_string()],
+        ).await;
+    }
+
+    async fn add_request(&mut self, user_ip: Option<net::SocketAddr>){
+        //Add new request to database
+        self.db.query(
+            "INSERT INTO ip (user_ip, window_start) VALUES (?,?)",
+            &[&self.start.to_string()],
+        ).await;
     }
 }
+
+
 
 impl<S, B> Transform<S, ServiceRequest> for RateLimiter
 where
@@ -64,9 +102,12 @@ where
     type Future = Ready<Result<Self::Transform, Self::InitError>>;
 
     fn new_transform(&self, service: S) -> Self::Future {
+        //Client creation
+        let db = Surreal::<Client>::new("database_connection_string").unwrap();
+
         ready(Ok(RateLimiterMiddleware {
             service,
-            rate_limiter: FixedWindowRateLimiter::new(self.max_requests, self.duration),
+            rate_limiter: FixedWindowRateLimiter::new(self.max_requests, self.duration, db),
         }))
     }
 }
@@ -90,33 +131,19 @@ where
 
     fn call(&self, request: ServiceRequest) -> Self::Future {
         println!("{} ", request.path());
-        pub fn is_allowed(&mut self, user_ip: Option<net::SocketAddr>) -> bool {
-            let now = Instant::now();
-            let elapsed = now.duration_since(self.start);
-            if elapsed > self.duration.to_std().unwrap() {
-                self.user_requests.clear();
-                self.start = now;
-            }
-            let requests = self.user_requests.entry(user_ip).or_insert(0);
-            *requests += 1;
-            *requests <= self.max_requests
-        }
         let user_ip = request.peer_addr();
         let db = request.app_data::<Surreal<Client>>().unwrap();
-        let is_allowed = false;
-        if is_allowed {
-            let future = self.service.call(request);
-            Box::pin(async move {
+        let mut rate_limiter = self.rate_limiter;
+
+        Box::pin(async move{
+            if rate_limiter.is_allowed(user_ip).await{
+                rate_limiter.add_request(user_ip).await;
+                let future = self.service.call(request);
                 let result = future.await?;
                 Ok(result)
-            })
-        } else {
-            //let response = UserError::TooManyRequests.respond_to(&request)?;
-            //let parts = request.into_parts();
-            Box::pin(async {
-                //Ok(ServiceResponse::new(parts.0, response.into()).map_err(Error::from))
+            }else{
                 Err(UserError::TooManyRequests)
-            })
-        }
+            }
+        })
     }
 }
