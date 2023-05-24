@@ -7,19 +7,38 @@ use surrealdb::{engine::remote::ws::Client, Surreal};
 
 use crate::{
     error::{Result, UserError},
-    models::ApiResponse,
+    models::{ApiResponse, FilterItem},
 };
 
 #[get("/{filter_type}")]
 async fn get_filters(
     db: Data<Surreal<Client>>,
     filter_type: Path<String>,
-) -> Result<ApiResponse<Vec<String>>> {
+) -> Result<ApiResponse<Vec<FilterItem>>> {
     match filter_type.as_str() {
-        "noise" => Err(UserError::InternalError),
-        "type" => Err(UserError::InternalError),
-        "attributes" => Err(UserError::InternalError),
-        _ => Err(UserError::InternalError),
+        "attribute" | "noise" | "location_type" => {
+            let query_result = db
+                .query("SELECT * FROM type::table($table);")
+                .bind(("table", filter_type.to_string()))
+                .await;
+            match query_result {
+                Ok(mut response) => {
+                    let parse_result = response.take(0);
+                    match parse_result {
+                        Ok(location) => Ok(ApiResponse::new(location)),
+                        Err(err) => {
+                            println!("error inner: {:#?}", err);
+                            Err(UserError::InternalError)
+                        }
+                    }
+                }
+                Err(err) => {
+                    println!("error outer: {:#?}", err);
+                    Err(UserError::InternalError)
+                }
+            }
+        }
+        _ => Err(UserError::Unimplemented),
     }
 }
 
