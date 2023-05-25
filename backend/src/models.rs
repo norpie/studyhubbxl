@@ -1,4 +1,5 @@
 use actix_web::{body::BoxBody, http::header::ContentType, HttpResponse, Responder};
+use chrono::{Utc, DateTime};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -89,6 +90,13 @@ struct Location {
     noise: Noise,
     address: String,
     coordinates: (Decimal, Decimal),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Ip {
+    pub ip: String,
+    pub window_start: DateTime<Utc>,
+    pub requests: u32,
 }
 
 
