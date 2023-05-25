@@ -9,15 +9,24 @@
 
 <style scoped>
 .Panel {
-  opacity: 0.5;
-  background-color: #777;
+  opacity: 0.4;
+  background-color: #2F86A6 ;
   border-radius: 10px;
-  width: 20%;
-  text-align: center;
-  font-size: larger;
-  text-transform: uppercase;
+  border: 1px solid black;
+  width: 11%;
+  margin:5px;
+  text-align: left;
+  font-size: 11px;
+  padding-left:5px;
+  list-style-type:none;
+
   overflow: hidden;
   transition: max-height 0.5s ease-in-out;
+}
+
+
+.text{
+  text-align: center;
 }
 
 .header {
@@ -25,7 +34,8 @@
 }
 
 .Panel:hover {
-  background-color: #555;
+  opacity: 0.6;
+  
 }
 
 .expanded {
