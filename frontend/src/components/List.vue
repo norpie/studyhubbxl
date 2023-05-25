@@ -16,16 +16,16 @@ export default {
 
 <style scoped>
 .list-wrapper {
-    height: 330px;
+    height: 1000px;
     overflow-y: scroll;
     display: flex;
     justify-content: center;
 }
 
 .list {
-    width: 200px;
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
 }
 </style>

@@ -12,7 +12,7 @@
   opacity: 0.5;
   background-color: #777;
   border-radius: 10px;
-  width: 20%;
+  width: 500px;
   text-align: center;
   font-size: larger;
   text-transform: uppercase;

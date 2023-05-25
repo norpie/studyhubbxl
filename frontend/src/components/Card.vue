@@ -1,6 +1,8 @@
 <template>
     <div class="card">
-        <div class="card-rectangle">{{ label }}</div>
+        <div class="card-rectangle">{{ label }}
+        <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -16,7 +18,7 @@ export default defineComponent({
 
 <style scoped>
 .card {
-    width: 200px;
+    width: 90%;
     height: 100px;
     margin: 10px;
     display: flex;
