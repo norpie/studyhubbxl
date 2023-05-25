@@ -4,6 +4,8 @@ export default {
         label: String,
         id: String,
         placeholder: String,
+        v_model: String,
+        input: String
     },
 }
 </script>
@@ -11,7 +13,7 @@ export default {
 
 <template>
     <label for="textfield">{{ label }}</label>
-    <input type="text" class="textfield" :id="id" :placeholder="placeholder" />
+    <input type="text" class="textfield" :id="id" :placeholder="placeholder" :@input="input" :v-model="v_model" />
 </template>
 
 <style scoped>
@@ -25,6 +27,8 @@ label {
     border-style: none;
     background-color: white;
     display: block;
+    margin: 0;
+    padding: 0;
 
 }
 </style>

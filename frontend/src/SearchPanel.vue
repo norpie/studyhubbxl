@@ -8,21 +8,24 @@
 */
 
 <template>
-    <div>
-        <div class="search-bar">
-            <input type="text" v-model="searchQuery" @input="handleInput" placeholder="Search...">
+    <Panel label="search">
 
-        </div>
+        <input class="search-bar" type="text" v-model="searchQuery" @input="handleInput" placeholder="Search...">
         <div class="search-results" @scroll="handleScroll">
             <ul>
                 <li v-for="result in visibleResults" :key="result">{{ result }}</li>
             </ul>
         </div>
-    </div>
+    </Panel>
 </template>
 <script lang="ts">
 
+import Panel from './components/Panel.vue';
+
 export default {
+    components: {
+        Panel
+    },
     data() {
         return {
             searchQuery: '',
@@ -51,10 +54,15 @@ export default {
             }
         },
         loadMoreResults() {
+            console.log("test");
             const end = this.scrollOffset + this.resultsPerPage;
             this.visibleResults = this.results.slice(0, end);
             this.scrollOffset += this.resultsPerPage;
         },
+        performSearch() {
+            console.log("Performing search...");
+
+        }
     },
 };
 </script>
@@ -62,11 +70,27 @@ export default {
 .search-bar {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
+    margin: 10px;
+    /*border-radius: 20px;
+    overflow: hidden;*/
+    background: none;
+
+
 }
 
-.search-icon {
-    align-items: end;
+.placeholder {
+    color: black;
 }
+
+.search-input {
+    flex-grow: 1;
+    margin: 0;
+    border: none;
+    border-radius: 20px;
+    padding: 8px;
+}
+
 
 .search-results {
     max-height: 300px;
