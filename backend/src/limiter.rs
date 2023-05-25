@@ -1,11 +1,7 @@
 use std::future::{ready, Ready};
 use std::net;
-
 use actix_web::rt::time::Instant;
-use actix_web::{
-    dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
-    
-};
+use actix_web::{dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform}};
 use surrealdb::Surreal;
 use surrealdb::engine::remote::ws::Client;
 use chrono::Duration;
@@ -53,13 +49,13 @@ impl FixedWindowRateLimiter {
     
         //Check if the amount of requests is allowed
         let total_request = self.db.query(
-            "SELECT COUNT(*) FROM ip WHERE user_ip = ? AND window_start = ?",
-            &[&user_ip, &self.start.to_string()],
-        ).await;
+            "SELECT COUNT(*) FROM ip WHERE user_ip = $user_ip AND window_start = $window_start;")
+           .bind(("user_ip", user_ip))
+           .bind(("window_start", self.start.to_string())).await;
     
         if let Ok(rows) = total_request {
-            if let Some(row) = rows.get(0){
-                if let Some(count) = row.get(0){
+            if let Some(row) = rows.take(0){
+                if let Some(count) = row.take(0){
                     let requests: u32 = count;
                     return requests <= self.max_requests;
                 }
@@ -72,18 +68,19 @@ impl FixedWindowRateLimiter {
         //Start time reset
         self.start = Instant::now();
         //Clear total_request for next window
-        self.db.query(
-            "DELETE FROM ip WHERE window_start = ?",
-            &[&self.start.to_string()],
-        ).await;
+        let query_result = self.db.query(
+            "DELETE FROM ip WHERE window_start = $window_start")
+            .bind(("window_start", self.start.to_string())).await;
     }
 
     async fn add_request(&mut self, user_ip: Option<net::SocketAddr>){
         //Add new request to database
-        self.db.query(
-            "INSERT INTO ip (user_ip, window_start) VALUES (?,?)",
-            &[&self.start.to_string()],
-        ).await;
+      let query_result = self.db.query(
+            "INSERT INTO ip (user_ip, window_start) VALUES ($user_ip, $window_start)")
+            .bind(("user_ip", user_ip))
+            .bind(("window_start", self.start.to_string()))
+            .await;
+        
     }
 }
 
