@@ -1,10 +1,10 @@
 use std::future::{ready, Ready};
 use std::net;
-use actix_web::rt::time::Instant;
 use actix_web::{dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform}};
 use surrealdb::Surreal;
 use surrealdb::engine::remote::ws::Client;
-use chrono::Duration;
+use chrono::{Duration, Utc};
+use chrono::DateTime;
 use futures_util::future::LocalBoxFuture;
 use crate::error::UserError;
 
@@ -27,7 +27,7 @@ struct FixedWindowRateLimiter {
     max_requests: u32,
     duration: Duration,
     db: Surreal<Client>,
-    start: Instant,
+    start: DateTime<Utc>,
 }
 
 impl FixedWindowRateLimiter {
@@ -36,14 +36,14 @@ impl FixedWindowRateLimiter {
             max_requests: 100,
             duration: Duration { secs: 10, nanos: 0 },
             db,
-            start: Instant::now(),
+            start: Utc::now(),
         }
     }
 
     pub async fn is_allowed(&mut self, user_ip: Option<net::SocketAddr>) -> bool{
-        let now = Instant::now();
-        let elapsed = now.duration_since(self.start);
-        if elapsed > self.duration.to_std().unwrap(){
+        let now = Utc::now();
+        let elapsed = now.signed_duration_since(self.start);
+        if elapsed > self.duration{
             self.window_reset().await;
         }
     
@@ -51,7 +51,7 @@ impl FixedWindowRateLimiter {
         let total_request = self.db.query(
             "SELECT COUNT(*) FROM ip WHERE user_ip = $user_ip AND window_start = $window_start;")
            .bind(("user_ip", user_ip))
-           .bind(("window_start", self.start.to_string())).await;
+           .bind(("window_start", self.start.to_rfc3339())).await;
     
         if let Ok(rows) = total_request {
             if let Some(row) = rows.take(0){
@@ -66,19 +66,19 @@ impl FixedWindowRateLimiter {
 
     async fn window_reset(&mut self){
         //Start time reset
-        self.start = Instant::now();
+        self.start = Utc::now();
         //Clear total_request for next window
         let query_result = self.db.query(
             "DELETE FROM ip WHERE window_start = $window_start")
-            .bind(("window_start", self.start.to_string())).await;
+            .bind(("window_start", self.start.to_rfc3339())).await;
     }
 
     async fn add_request(&mut self, user_ip: Option<net::SocketAddr>){
         //Add new request to database
       let query_result = self.db.query(
-            "INSERT INTO ip (user_ip, window_start) VALUES ($user_ip, $window_start)")
+            "UPDATE ip (user_ip, window_start) SET ($user_ip, $window_start)")
             .bind(("user_ip", user_ip))
-            .bind(("window_start", self.start.to_string()))
+            .bind(("window_start", self.start.to_rfc3339()))
             .await;
         
     }
@@ -99,12 +99,9 @@ where
     type Future = Ready<Result<Self::Transform, Self::InitError>>;
 
     fn new_transform(&self, service: S) -> Self::Future {
-        //Client creation
-        let db = Surreal::<Client>::new("database_connection_string").unwrap();
-
         ready(Ok(RateLimiterMiddleware {
             service,
-            rate_limiter: FixedWindowRateLimiter::new(self.max_requests, self.duration, db),
+            rate_limiter: FixedWindowRateLimiter::new(self.max_requests, self.duration, &self.db),
         }))
     }
 }
