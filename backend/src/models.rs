@@ -3,6 +3,7 @@ use actix_web::{
     http::{header::ContentType, StatusCode},
     HttpResponse, HttpResponseBuilder, Responder,
 };
+use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use surrealdb::sql::Thing;
@@ -95,6 +96,13 @@ impl Location {
 pub struct Coordinates {
     pub identifier: Uuid,
     pub coordinates: Vec<Decimal>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Reset {
+    pub identifier: Uuid,
+    pub slug: String,
+    pub generation_time: DateTime<Utc>
 }
 
 #[derive(Debug, Serialize, Deserialize)]
