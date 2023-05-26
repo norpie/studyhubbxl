@@ -67,91 +67,8 @@ where
     fn call(&self, request: ServiceRequest) -> Self::Future {
         let user_ip = get_ip(&request);
         let db = get_db(&request);
-
-        //Check if the amount of requests is allowed
-
-        /*Box::pin(async move {
-            if rate_limiter.is_allowed(user_ip, &mut db).await {
-                rate_limiter.add_request(user_ip, &mut db).await;
-                let future = self.service.call(request);
-                let result = future.await?;
-                Ok(result)
-            } else {
-                Err(UserError::TooManyRequests)
-            }
-        })*/
-
-        /*
-        //Start time reset
-        self.start = Utc::now();
-        //Clear total_request for next window
-        let query_result = db
-            .query("DELETE FROM ip WHERE window_start = $window_start")
-            .bind(("window_start", self.start.to_rfc3339()))
-            .await;
-         */
-        /*
-        //Add new request to database
-        let query_result = db.query(
-            "UPDATE ip SET requests = $requests WHERE user_ip = $user_ip")
-            .bind(("requests", total_request))
-            .bind(("user_ip", user_ip))
-            .await;
-         */
-        /*      let fut = self.service.call(request);
-                Box::pin(async move {
-                    let query_result = db
-                        .query("SELECT * FROM ip WHERE user_ip = $user_ip LIMIT 1")
-                        .bind(("user_ip", user_ip))
-                        .await;
-                    let is_allowed = match query_result {
-                        Ok(mut response) => {
-                            let ip_result: surrealdb::Result<Option<Ip>> = response.take(0);
-                            match ip_result {
-                                Ok(optional_ip) => match optional_ip {
-                                    Some(ip) => {
-                                        while ip.requests< self.rate_limiter.max_requests{
-                                            let add_req = db
-                                        .query("UPDATE ip SET requests = $requests WHERE user_ip = $user_ip")
-                                        .bind(("requests",  ip.requests + 1))
-                                        .bind(("user_ip", user_ip))
-                                        .await;
-                                        true;
-                                        break;
-                                      }
-                                    }
-                                    None => {
-                                    let add_ip = db
-                                    .query("INSERT INTO ip (user_ip, requests) VALUES ($user_ip, 1)")
-                                    .bind(("user_ip", optional_ip))
-                                    .await;
-                                    false;
-                                },
-                                Err(err) => {
-                                    println!("error outer: {:#?}", err);
-                                    false
-                                }
-                            }
-                        }
-                        Err(err) => {
-                            println!("error outer: {:#?}", err);
-                            false
-                        }
-                    };
-                    if is_allowed {
-                        let result = fut.await?;
-                        Ok(result)
-                    } else {
-                        Err(UserError::TooManyRequests)
-                    }
-                })
-            }
-        }
-
-
-         */
-
         let fut = self.service.call(request);
+
         Box::pin(async move {
             let query_result = db
                 .query("SELECT * FROM ip WHERE user_ip = $user_ip LIMIT 1")
@@ -178,7 +95,7 @@ where
                                             true
                                         }
                                         Err(err) => {
-                                            println!("error inner: {:#?}", err);
+                                            println!("error: {:#?}", err);
                                             false
                                         }
                                     }
@@ -193,7 +110,7 @@ where
                                             true
                                         }
                                         Err(err) => {
-                                            println!("error inner: {:#?}", err);
+                                            println!("error: {:#?}", err);
                                             false
                                         }
                                     }
@@ -212,19 +129,19 @@ where
                                     .bind(("requests", 1))
                                     .await; 
                                 if result.is_err() {
-                                    println!("error outer: {:#?}", result.unwrap_err()); // TODO: all errors
+                                    println!("error: {:#?}", result.unwrap_err()); 
                                 }
                                 false
                             }
                         },
                         Err(err) => {
-                            println!("error outer: {:#?}", err);
+                            println!("error: {:#?}", err);
                             false
                         }
                     }
                 }
                 Err(err) => {
-                    println!("error outer: {:#?}", err);
+                    println!("error: {:#?}", err);
                     false
                 }
             };
