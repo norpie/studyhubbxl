@@ -82,18 +82,19 @@ where
                         Ok(optional_ip) => match optional_ip {
                             Some(ip) => {
                                 if Utc::now() - ip.window_start > Duration::seconds(10) {
-                                    let result = db.query("UPDATE ip: user_ip = $user_ip CONTENT {
-                                        requests: $requests, 
-                                        window_start: $window_start, 
-                                        user_ip: $user_ip }")
+                                    let result = db
+                                        .query(
+                                            "UPDATE ip: user_ip = $user_ip CONTENT {
+                                        requests: $requests,
+                                        window_start: $window_start,
+                                        user_ip: $user_ip }",
+                                        )
                                         .bind(("user_ip", ip))
                                         .bind(("requests", 1))
                                         .bind(("window_start", Utc::now()))
                                         .await;
-                                    match result{
-                                        Ok(_) => {
-                                            true
-                                        }
+                                    match result {
+                                        Ok(_) => true,
                                         Err(err) => {
                                             println!("error: {:#?}", err);
                                             false
@@ -106,30 +107,30 @@ where
                                     .bind(("user_ip", user_ip))
                                     .await;
                                     match result {
-                                        Ok(_) => {
-                                            true
-                                        }
+                                        Ok(_) => true,
                                         Err(err) => {
                                             println!("error: {:#?}", err);
                                             false
                                         }
                                     }
                                 } else {
-                                        false
+                                    false
                                 }
                             }
                             None => {
                                 let result = db
-                                    .query("CREATE ip CONTENT{
+                                    .query(
+                                        "CREATE ip CONTENT{
                                         user_ip = $user_ip,
                                         window_start = $window_start,
-                                        requests = $requests}")
+                                        requests = $requests}",
+                                    )
                                     .bind(("user_ip", user_ip))
                                     .bind(("window_start", Utc::now()))
                                     .bind(("requests", 1))
-                                    .await; 
+                                    .await;
                                 if result.is_err() {
-                                    println!("error: {:#?}", result.unwrap_err()); 
+                                    println!("error: {:#?}", result.unwrap_err());
                                 }
                                 false
                             }
