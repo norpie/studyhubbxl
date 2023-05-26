@@ -26,7 +26,6 @@ async fn delete_account(id: Path<Uuid>) -> Result<ApiResponse<& 'static str>> {
         return Ok(ApiResponse::new(""))
     }
     Err(crate::error::UserError::WrongPasswordOrUsername)
-
 }
 
 pub fn scope() -> Scope {

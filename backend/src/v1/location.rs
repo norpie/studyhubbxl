@@ -1,6 +1,7 @@
 use actix_web::{
     get, post,
-    web::{Json, Path, Query, self}, Scope,
+    Responder, Scope,
+    web::{Json, Path, Query, self},
 };
 use serde::Deserialize;
 use uuid::Uuid;
@@ -25,22 +26,14 @@ struct Filter {
 
 //Request locations by search or filter or both
 #[post("/")]
-async fn filter_search_locations(query: Query<LocationQuery>, filter: Json<Filter>) -> Result<ApiResponse<& 'static str>> {
-    let bool = true;
-    if bool{
-        return Ok(ApiResponse::new(""))
-    }
-    Err(crate::error::UserError::TooManyRequests)
-    }
+async fn filter_search_locations(query: Query<LocationQuery>, filter: Json<Filter>) -> Result<ApiResponse<&'static str>> {
+    Ok(ApiResponse::new(" "))
+}
 
 //Get specific location
 #[get("/{id}")]
-async fn get_location(id: Path<Uuid>) -> Result<ApiResponse<& 'static str>> {
-    let bool = true;
-    if bool{
-        return Ok(ApiResponse::new(""))
-    }
-    Err(crate::error::UserError::TooManyRequests)
+async fn get_location(id: Path<Uuid>) -> Result<ApiResponse<&'static str>> {
+    Ok(ApiResponse::new(" "))
 }
 
 pub fn scope() -> Scope {
@@ -48,4 +41,3 @@ pub fn scope() -> Scope {
         .service(get_location)
         .service(filter_search_locations)
 }
-

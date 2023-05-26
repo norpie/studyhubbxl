@@ -3,12 +3,15 @@ use actix_web::{
     web::{self, Data},
     App, HttpServer,
 };
+use limiter::RateLimiter;
 use surrealdb::{engine::remote::ws::Ws, opt::auth::Root, Surreal};
 
+mod limiter;
 mod models;
 mod search;
-mod v1;
 mod error;
+
+mod v1;
 
 #[actix_web::main]
 async fn main() -> Result<(), Error> {
@@ -39,8 +42,8 @@ async fn main() -> Result<(), Error> {
         App::new().app_data(Data::new(db.clone())).service(
             web::scope("/api").service(
                 web::scope("/v1")
-                    .service(web::scope("").service(v1::private()))
-                    .service(web::scope("").service(v1::public())),
+                    .service(v1::private())
+                    .service(v1::public())
             ),
         )
     })
