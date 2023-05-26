@@ -83,7 +83,7 @@ async fn delete_account(
     db: Data<Surreal<Client>>,
     req: HttpRequest,
 ) -> Result<ApiResponse<&'static str>> {
-    let id = super::parse_id(req);
+    let id = super::parse_id(req)?;
     Err(UserError::WrongPasswordOrUsername)
 }
 
