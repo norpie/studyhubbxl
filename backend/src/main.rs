@@ -6,6 +6,7 @@ use std::io::Error;
 use surrealdb::{engine::remote::ws::Ws, opt::auth::Root, Surreal};
 
 mod error;
+mod email;
 mod models;
 mod search;
 mod v1;
