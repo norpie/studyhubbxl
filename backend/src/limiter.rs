@@ -23,17 +23,11 @@ impl RateLimiter {
     }
 }
 
-struct FixedWindowRateLimiter {
-    max_requests: u32,
-    duration: Duration,
-}
+struct FixedWindowRateLimiter;
 
 impl FixedWindowRateLimiter {
     pub fn new(max_requests: u32, duration: Duration) -> Self {
-        FixedWindowRateLimiter {
-            max_requests: 100,
-            duration: Duration::seconds(10),
-        }
+        FixedWindowRateLimiter {}
     }
 }
 
@@ -50,16 +44,12 @@ where
     type Future = Ready<Result<Self::Transform, Self::InitError>>;
 
     fn new_transform(&self, service: S) -> Self::Future {
-        ready(Ok(RateLimiterMiddleware {
-            service,
-            rate_limiter: FixedWindowRateLimiter::new(self.max_requests, self.duration),
-        }))
+        ready(Ok(RateLimiterMiddleware { service }))
     }
 }
 
 pub struct RateLimiterMiddleware<S> {
     service: S,
-    rate_limiter: FixedWindowRateLimiter,
 }
 
 impl<S, B> Service<ServiceRequest> for RateLimiterMiddleware<S>
@@ -160,6 +150,7 @@ where
 
 
          */
+
         let fut = self.service.call(request);
         Box::pin(async move {
             let query_result = db
@@ -172,23 +163,58 @@ where
                     let ip_result: surrealdb::Result<Option<Ip>> = response.take(0);
                     match ip_result {
                         Ok(optional_ip) => match optional_ip {
-                            Some(mut ip) => {
-                                while ip.requests < self.rate_limiter.max_requests {
-                                    let add_req = db
+                            Some(ip) => {
+                                if Utc::now() - ip.window_start > Duration::seconds(10) {
+                                    let result = db.query("UPDATE ip: user_ip = $user_ip CONTENT {
+                                        requests: $requests, 
+                                        window_start: $window_start, 
+                                        user_ip: $user_ip }")
+                                        .bind(("user_ip", ip))
+                                        .bind(("requests", 1))
+                                        .bind(("window_start", Utc::now()))
+                                        .await;
+                                    match result{
+                                        Ok(_) => {
+                                            true
+                                        }
+                                        Err(err) => {
+                                            println!("error inner: {:#?}", err);
+                                            false
+                                        }
+                                    }
+                                } else if ip.requests < 10 {
+                                    let result = db
                                     .query("UPDATE ip SET requests = $requests WHERE user_ip = $user_ip")
                                     .bind(("requests", ip.requests + 1))
                                     .bind(("user_ip", user_ip))
                                     .await;
-                                    true;
-                                    break;
+                                    match result {
+                                        Ok(_) => {
+                                            true
+                                        }
+                                        Err(err) => {
+                                            println!("error inner: {:#?}", err);
+                                            false
+                                        }
+                                    }
+                                } else {
+                                        false
                                 }
                             }
                             None => {
-                                let add_ip = db
-                                    .query("INSERT INTO ip user_ip VALUES $user_ip")
+                                let result = db
+                                    .query("CREATE ip CONTENT{
+                                        user_ip = $user_ip,
+                                        window_start = $window_start,
+                                        requests = $requests}")
                                     .bind(("user_ip", user_ip))
-                                    .await;
-                                false;
+                                    .bind(("window_start", Utc::now()))
+                                    .bind(("requests", 1))
+                                    .await; 
+                                if result.is_err() {
+                                    println!("error outer: {:#?}", result.unwrap_err()); // TODO: all errors
+                                }
+                                false
                             }
                         },
                         Err(err) => {
@@ -202,19 +228,19 @@ where
                     false
                 }
             };
-
             if is_allowed {
                 let result = fut.await?;
                 Ok(result)
             } else {
                 Err(UserError::TooManyRequests)
             }
-        });
-        fn get_db(req: &ServiceRequest) -> Surreal<Client> {
-            req.app_data::<Surreal<Client>>().unwrap().clone()
-        }
-        fn get_ip(req: &ServiceRequest) -> SocketAddr {
-            req.peer_addr().unwrap()
-        }
+        })
     }
+}
+
+fn get_db(req: &ServiceRequest) -> Surreal<Client> {
+    req.app_data::<Surreal<Client>>().unwrap().clone()
+}
+fn get_ip(req: &ServiceRequest) -> SocketAddr {
+    req.peer_addr().unwrap()
 }
