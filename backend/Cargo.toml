@@ -8,9 +8,9 @@ edition = "2021"
 [dependencies]
 actix-web = "4.3.1"
 chrono = "0.4.24"
-derive-error = "0.0.5"
 derive_more = "0.99.17"
 futures-util = "0.3.28"
+lettre = "0.10.4"
 rust_decimal = { version = "1.29.1", features = ["serde_json"] }
 serde = { version = "1.0.162", features = ["derive"] }
 serde_json = "1.0.96"

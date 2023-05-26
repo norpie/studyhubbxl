@@ -7,9 +7,12 @@ use uuid::Uuid;
 /// Wrapper for every response made by the backend
 #[derive(Debug, Clone, Serialize)]
 pub struct ApiResponse<T> {
+    #[serde(skip_serializing_if = "Option::is_none")]
     result: Option<T>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    error: Option<String>,
+    #[serde(skip_serializing)]
     status: u16,
-    error: String,
 }
 
 impl<T: Serialize> ApiResponse<T> {
@@ -18,16 +21,16 @@ impl<T: Serialize> ApiResponse<T> {
         ApiResponse {
             result: Some(object),
             status: 200,
-            error: "".into(),
+            error: None,
         }
     }
 
     /// Wrap error in ApiResponse
     pub fn error(status: u16, error: String) -> Self {
         ApiResponse {
-            result: None,
+            error: Some(error),
             status,
-            error,
+            result: None,
         }
     }
 }

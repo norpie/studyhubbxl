@@ -1,12 +1,13 @@
 use actix_web::{
     get, post,
-    web::{Json, Path, Query, self},
     Responder, Scope,
+    web::{Json, Path, Query, self},
 };
 use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::models::ApiResponse;
+use crate::error::Result;
 
 #[derive(Debug, Deserialize)]
 struct LocationQuery {
@@ -25,14 +26,14 @@ struct Filter {
 
 //Request locations by search or filter or both
 #[post("/")]
-async fn filter_search_locations(query: Query<LocationQuery>, filter: Json<Filter>) -> impl Responder {
-    ApiResponse::new(" ")
+async fn filter_search_locations(query: Query<LocationQuery>, filter: Json<Filter>) -> Result<ApiResponse<&'static str>> {
+    Ok(ApiResponse::new(" "))
 }
 
 //Get specific location
 #[get("/{id}")]
-async fn get_location(id: Path<Uuid>) -> impl Responder {
-    ApiResponse::new(" ")
+async fn get_location(id: Path<Uuid>) -> Result<ApiResponse<&'static str>> {
+    Ok(ApiResponse::new(" "))
 }
 
 pub fn scope() -> Scope {
