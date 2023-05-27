@@ -22,7 +22,7 @@ async fn reset_password(
     db: Data<Surreal<Client>>,
     req: HttpRequest,
 ) -> Result<ApiResponse<&'static str>> {
-    let id = super::parse_id(req)?;
+    let id = super::parse_id(req).await?;
     let slug = sha256::digest(Uuid::new_v4().to_string());
     let result: surrealdb::Result<DeleteOrReset> = db
         .create("reset")
@@ -83,7 +83,7 @@ async fn delete_account(
     db: Data<Surreal<Client>>,
     req: HttpRequest,
 ) -> Result<ApiResponse<&'static str>> {
-    let id = super::parse_id(req)?;
+    let id = super::parse_id(req).await?;
     let slug = sha256::digest(Uuid::new_v4().to_string());
     let result: surrealdb::Result<DeleteOrReset> = db
         .create("udelete")
