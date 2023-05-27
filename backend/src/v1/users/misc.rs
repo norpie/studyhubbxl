@@ -78,13 +78,64 @@ async fn reset_password(
 }
 
 //Get delete user page
-#[get("/delete/{id}")]
+#[get("/delete")]
 async fn delete_account(
     db: Data<Surreal<Client>>,
     req: HttpRequest,
 ) -> Result<ApiResponse<&'static str>> {
     let id = super::parse_id(req)?;
-    Err(UserError::WrongPasswordOrUsername)
+    let slug = sha256::digest(Uuid::new_v4().to_string());
+    let result: surrealdb::Result<DeleteOrReset> = db
+        .create("udelete")
+        .content(DeleteOrReset {
+            identifier: id.clone(),
+            generation_time: Utc::now(),
+            slug: slug.clone(),
+        })
+        .await;
+    match result {
+        Ok(_) => {
+            let query_result = db
+                .query("SELECT * FROM user WHERE identifier = $id")
+                .bind(("id", id))
+                .await;
+            match query_result {
+                Ok(mut response) => {
+                    let take_result: surrealdb::Result<Option<User>> = response.take(0);
+                    match take_result {
+                        Ok(optional_user) => {
+                            let user = optional_user.unwrap();
+                            let email_result = email::send_email(
+                                &user.email,
+                                "Undelete Account",
+                                &("https://ourlink.domain/reset/".to_string() + &slug),
+                            )
+                            .await;
+                            match email_result {
+                                Ok(_) => Ok(ApiResponse::new("")),
+                                Err(err) => {
+                                    println!("error: {:#?}", &err);
+                                    Err(UserError::InternalError)
+                                }
+                            }
+                        }
+                        Err(err) => {
+                            println!("error: {:#?}", &err);
+                            Err(UserError::InternalError)
+                        }
+                    }
+                }
+                Err(err) => {
+                    println!("error: {:#?}", &err);
+                    Err(UserError::InternalError)
+                }
+            }
+        }
+        Err(err) => {
+            println!("error: {:#?}", &err);
+            Err(UserError::InternalError)
+        }
+    }
 }
 
 pub fn scope() -> Scope {
