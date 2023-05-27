@@ -110,3 +110,9 @@ pub struct Favourite {
     location_id: Uuid,
     user_id: Uuid,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Session {
+    identifier: Uuid,
+    session_id: Uuid,
+}
