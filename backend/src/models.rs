@@ -60,7 +60,6 @@ impl<T: Serialize> Responder for ApiResponse<T> {
 pub struct User {
     pub id: Uuid,
     pub email: String,
-    pub username: String,
     pub password: String,
     pub salt: String,
 }
