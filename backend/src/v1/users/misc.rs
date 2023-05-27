@@ -17,7 +17,7 @@ use crate::{
 };
 
 //Get reset password page
-#[get("/reset/{id}")]
+#[get("/reset")]
 async fn reset_password(
     db: Data<Surreal<Client>>,
     req: HttpRequest,
