@@ -22,6 +22,8 @@ pub enum UserError {
     TooManyRequests,
     #[display(fmt = "There is not method for this input.")]
     Unimplemented,
+    #[display(fmt = "There is already an account with that email.")]
+    EmailUsed,
 }
 
 impl error::ResponseError for UserError {
@@ -36,6 +38,7 @@ impl error::ResponseError for UserError {
             UserError::ValidationError { .. } => StatusCode::BAD_REQUEST,
             UserError::InternalError => StatusCode::INTERNAL_SERVER_ERROR,
             UserError::Unathorized => StatusCode::UNAUTHORIZED,
+            UserError::EmailUsed => StatusCode::UNAUTHORIZED,
             UserError::WrongPasswordOrUsername => StatusCode::UNAUTHORIZED,
             UserError::TooManyRequests => StatusCode::TOO_MANY_REQUESTS,
             UserError::Unimplemented => StatusCode::NOT_IMPLEMENTED,
