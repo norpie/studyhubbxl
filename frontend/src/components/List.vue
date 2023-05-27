@@ -18,7 +18,6 @@ export default {
 .list-wrapper {
     height: 300px;
     overflow-y: scroll;
-
     justify-content: center;
 }
 
