@@ -62,7 +62,7 @@ pub struct User {
     pub email: String,
     pub username: String,
     pub password: String,
-    pub salt: Uuid,
+    pub salt: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
