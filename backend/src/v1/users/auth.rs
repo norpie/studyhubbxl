@@ -1,12 +1,14 @@
 use actix_web::{
     post,
     web::{self, Json},
-    Responder, Scope,
+    Scope,
 };
+use argon2::{Argon2, PasswordHasher, password_hash::{SaltString, rand_core::OsRng, Salt}};
 use serde::Deserialize;
+use uuid::Uuid;
 
-use crate::models::ApiResponse;
 use crate::error::Result;
+use crate::models::ApiResponse;
 
 #[derive(Debug, Deserialize)]
 struct RegisterUser {
@@ -21,25 +23,21 @@ struct LoginUser {
     password: String,
 }
 
+fn hash(password: String, salt: Salt) -> String {
+    Argon2::default().hash_password(password.as_bytes(), salt).unwrap().to_string()
+}
+
 //Request to register user
 #[post("/register")]
-async fn register_user(user: Json<RegisterUser>) -> Result<ApiResponse<& 'static str>>{
-    let bool = true;
-    if bool{
-        return Ok(ApiResponse::new(""))
-    }
+async fn register_user(input: Json<RegisterUser>) -> Result<ApiResponse<&'static str>> {
     Err(crate::error::UserError::WrongPasswordOrUsername)
+
 }
 
 //Request to login user
 #[post("/login")]
-async fn login_user(user: Json<LoginUser>) -> Result<ApiResponse<& 'static str>>{
-    let bool = true;
-    if bool{
-        return Ok(ApiResponse::new(""))
-    }
+async fn login_user(input: Json<LoginUser>) -> Result<ApiResponse<&'static str>> {
     Err(crate::error::UserError::WrongPasswordOrUsername)
-    
 }
 
 pub fn scope() -> Scope {
