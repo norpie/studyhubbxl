@@ -11,7 +11,7 @@ import List from './List.vue';
 </script>
 
 <template>
-    <Panel label="Favourites" style="">
+    <Panel label="Favourites" >
         <List class="List">
             <Card class="card-fav" label="je moeder" >
                 <Icon src="search-icon.png" />
@@ -42,7 +42,8 @@ import List from './List.vue';
 
 <style scoped>
 .List::-webkit-scrollbar{
-
+    display: none;
 }
+
 
 </style>
