@@ -6,7 +6,6 @@ use actix_web::{
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use surrealdb::sql::Thing;
 use uuid::Uuid;
 
 /// Wrapper for every response made by the backend
@@ -99,7 +98,7 @@ pub struct Coordinates {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Reset {
+pub struct DeleteOrReset {
     pub identifier: Uuid,
     pub slug: String,
     pub generation_time: DateTime<Utc>

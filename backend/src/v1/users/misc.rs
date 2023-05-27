@@ -13,7 +13,7 @@ use crate::{
 };
 use crate::{
     error::{Result, UserError},
-    models::Reset,
+    models::DeleteOrReset,
 };
 
 //Get reset password page
@@ -24,9 +24,9 @@ async fn reset_password(
 ) -> Result<ApiResponse<&'static str>> {
     let id = super::parse_id(req)?;
     let slug = sha256::digest(Uuid::new_v4().to_string());
-    let result: surrealdb::Result<Reset> = db
+    let result: surrealdb::Result<DeleteOrReset> = db
         .create("reset")
-        .content(Reset {
+        .content(DeleteOrReset {
             identifier: id.clone(),
             generation_time: Utc::now(),
             slug: slug.clone(),
