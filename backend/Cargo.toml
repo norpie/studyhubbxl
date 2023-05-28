@@ -7,12 +7,14 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4.3.1"
-chrono = "0.4.24"
-derive_more = "0.99.17"
+argon2 = "0.5.0"
+chrono = { version = "0.4.24", features = ["serde"] }
+derive_more = {version = "0.99.17", features = ["display", "error"]}
 futures-util = "0.3.28"
 lettre = "0.10.4"
 rust_decimal = { version = "1.29.1", features = ["serde_json"] }
 serde = { version = "1.0.162", features = ["derive"] }
 serde_json = "1.0.96"
+sha256 = "1.1.3"
 surrealdb = "1.0.0-beta.9"
 uuid = { version = "1.3.2", features = ["serde", "v4"] }

@@ -1,13 +1,9 @@
-use crate::error::UserError;
-use crate::models::Ip;
+use crate::{error::UserError, models::Ip};
 use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform};
-use chrono::DateTime;
 use chrono::{Duration, Utc};
 use futures_util::future::LocalBoxFuture;
-use std::future::{ready, Ready};
-use std::net::{self, SocketAddr};
-use surrealdb::engine::remote::ws::Client;
-use surrealdb::Surreal;
+use std::{future::{ready, Ready}, net::SocketAddr};
+use surrealdb::{engine::remote::ws::Client, Surreal};
 
 pub struct RateLimiter {
     max_requests: u32,

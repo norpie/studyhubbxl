@@ -14,10 +14,16 @@ pub enum UserError {
     ValidationError { field: String },
     #[display(fmt = "An internal error occurred. Please try again later")]
     InternalError,
+    #[display(fmt = "Unathorized")]
+    Unathorized,
     #[display(fmt = "Wrong password/username")]
     WrongPasswordOrUsername,
     #[display(fmt = "Too many requests")]
     TooManyRequests,
+    #[display(fmt = "There is not method for this input.")]
+    Unimplemented,
+    #[display(fmt = "There is already an account with that email.")]
+    EmailUsed,
 }
 
 impl error::ResponseError for UserError {
@@ -31,8 +37,11 @@ impl error::ResponseError for UserError {
         match *self {
             UserError::ValidationError { .. } => StatusCode::BAD_REQUEST,
             UserError::InternalError => StatusCode::INTERNAL_SERVER_ERROR,
+            UserError::Unathorized => StatusCode::UNAUTHORIZED,
+            UserError::EmailUsed => StatusCode::UNAUTHORIZED,
             UserError::WrongPasswordOrUsername => StatusCode::UNAUTHORIZED,
             UserError::TooManyRequests => StatusCode::TOO_MANY_REQUESTS,
+            UserError::Unimplemented => StatusCode::NOT_IMPLEMENTED,
         }
     }
 }
@@ -64,6 +73,5 @@ impl Responder for UserError {
     //        }
     //    }
     //}
-
 }
- pub type Result<T> = std::result::Result<T, UserError>;
+pub type Result<T> = std::result::Result<T, UserError>;
