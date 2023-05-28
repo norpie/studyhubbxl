@@ -26,7 +26,7 @@ struct LoginUser {
     password: String,
 }
 
-fn hash(password: String, salt: &SaltString) -> String {
+fn hash(password: &String, salt: &SaltString) -> String {
     Argon2::default()
         .hash_password(password.as_bytes(), salt)
         .unwrap()
@@ -45,7 +45,7 @@ async fn register_user(
     }
     // Make user
     let salt = SaltString::generate(&mut OsRng);
-    let hash = hash(input.password.clone(), &salt);
+    let hash = hash(&input.password, &salt);
     let id = Uuid::new_v4();
     let query_result = db
         .query("CREATE user CONTENT { id: $id, email: $email, password: $password, salt: $salt }")
@@ -92,8 +92,20 @@ async fn get_user(db: &Surreal<Client>, email: &String) -> Result<Option<User>> 
 
 //Request to login user
 #[post("/login")]
-async fn login_user(input: Json<LoginUser>) -> Result<ApiResponse<&'static str>> {
-    Err(crate::error::UserError::WrongPasswordOrUsername)
+async fn login_user(
+    db: Data<Surreal<Client>>,
+    input: Json<LoginUser>,
+) -> Result<ApiResponse<Uuid>> {
+    let user_optional = get_user(&db, &input.email).await?;
+    if user_optional.is_none() {
+        return Err(UserError::WrongPasswordOrUsername);
+    }
+    let user = user_optional.unwrap();
+    let hash = hash(&input.password, &SaltString::from_b64(&user.salt).unwrap());
+    if hash != user.password {
+        return Err(UserError::WrongPasswordOrUsername);
+    }
+    Ok(ApiResponse::new(make_session(&db, user.id).await?))
 }
 
 pub fn scope() -> Scope {
