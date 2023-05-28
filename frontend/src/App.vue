@@ -1,13 +1,8 @@
 <script setup lang="ts">
-import Button from './components/Button.vue'
-import Error from './components/Error.vue'
-function test() {
-    console.log("test");
-}
 </script>
 
 <template>
-     <h1 class="text" label="hello man"/>
+    <SearchPanel />
 </template>
 
 <style>
