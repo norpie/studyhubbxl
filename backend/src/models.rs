@@ -1,4 +1,9 @@
-use actix_web::{body::BoxBody, http::header::ContentType, HttpResponse, Responder};
+use actix_web::{
+    body::BoxBody,
+    http::{header::ContentType, StatusCode},
+    HttpResponse, HttpResponseBuilder, Responder,
+};
+use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -10,7 +15,8 @@ pub struct ApiResponse<T> {
     result: Option<T>,
     #[serde(skip_serializing_if = "Option::is_none")]
     error: Option<String>,
-    status: u8,
+    #[serde(skip_serializing)]
+    status: u16,
 }
 
 impl<T: Serialize> ApiResponse<T> {
@@ -24,7 +30,7 @@ impl<T: Serialize> ApiResponse<T> {
     }
 
     /// Wrap error in ApiResponse
-    pub fn error(status: u8, error: String) -> Self {
+    pub fn error(status: u16, error: String) -> Self {
         ApiResponse {
             error: Some(error),
             status,
@@ -38,7 +44,7 @@ impl<T: Serialize> Responder for ApiResponse<T> {
     fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
         let result = serde_json::to_string(&self);
         match result {
-            Ok(json) => HttpResponse::Ok()
+            Ok(json) => HttpResponseBuilder::new(StatusCode::from_u16(self.status).unwrap())
                 .insert_header(("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .content_type(ContentType::json())
                 .body(json),
@@ -51,46 +57,57 @@ impl<T: Serialize> Responder for ApiResponse<T> {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct User {
-    id: Uuid,
-    email: String,
-    username: String,
-    password: String,
-    salt: Uuid,
+pub struct User {
+    pub id: Uuid,
+    pub email: String,
+    pub password: String,
+    pub salt: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum LocationType {
-    Cafe,
-    Library,
-    StudySpace,
-    Campus,
+pub struct FilterItem {
+    path: String,
+    display_name: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum Attribute {
-    Sockets,
-    Wifi,
-    CoWorking,
+pub struct Location {
+    pub identifier: Uuid,
+    pub name: String,
+    pub location_type: String,
+    pub attributes: Vec<String>,
+    pub noise: String,
+    pub address: String,
+    pub coordinates: Vec<Decimal>,
+}
+
+impl Location {
+    pub fn coords(&self) -> Coordinates {
+        Coordinates {
+            identifier: self.identifier,
+            coordinates: self.coordinates.clone(),
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-enum Noise {
-    Noisy,
-    Moderate,
-    Quiet,
-    Silent,
+pub struct Coordinates {
+    pub identifier: Uuid,
+    pub coordinates: Vec<Decimal>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Location {
-    id: Uuid,
-    name: String,
-    location_type: LocationType,
-    attributes: Vec<Attribute>,
-    noise: Noise,
-    address: String,
-    coordinates: (Decimal, Decimal),
+pub struct DeleteOrReset {
+    pub identifier: Uuid,
+    pub slug: String,
+    pub generation_time: DateTime<Utc>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Ip {
+    pub ip: String,
+    pub window_start: DateTime<Utc>,
+    pub requests: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -98,4 +115,10 @@ struct Favourite {
     id: Uuid,
     location_id: Uuid,
     user_id: Uuid,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Session {
+    pub identifier: Uuid,
+    pub session_id: Uuid,
 }
