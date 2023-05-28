@@ -1,4 +1,5 @@
 use actix_web::{body::BoxBody, http::header::ContentType, HttpResponse, Responder};
+use chrono::{Utc, DateTime};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -10,6 +11,7 @@ pub struct ApiResponse<T> {
     result: Option<T>,
     #[serde(skip_serializing_if = "Option::is_none")]
     error: Option<String>,
+    #[serde(skip_serializing)]
     status: u16,
 }
 
@@ -92,6 +94,14 @@ struct Location {
     address: String,
     coordinates: (Decimal, Decimal),
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Ip {
+    pub ip: String,
+    pub window_start: DateTime<Utc>,
+    pub requests: u32,
+}
+
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Favourite {

@@ -18,8 +18,10 @@ export default {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 15px;
+  height: 15px;
+  margin-left: 5px;
+
 }
 
 .icon-container img {

@@ -39,7 +39,6 @@ async fn login_user(user: Json<LoginUser>) -> Result<ApiResponse<& 'static str>>
         return Ok(ApiResponse::new(""))
     }
     Err(crate::error::UserError::WrongPasswordOrUsername)
-    
 }
 
 pub fn scope() -> Scope {
