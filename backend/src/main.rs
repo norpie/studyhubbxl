@@ -2,13 +2,15 @@ use actix_web::{
     web::{self, Data},
     App, HttpServer,
 };
+
 use std::io::Error;
 use surrealdb::{engine::remote::ws::Ws, opt::auth::Root, Surreal};
 
-mod error;
 mod email;
+mod error;
+mod limiter;
 mod models;
-mod search;
+
 mod v1;
 
 #[actix_web::main]

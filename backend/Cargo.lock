@@ -380,6 +380,7 @@ dependencies = [
  "argon2",
  "chrono",
  "derive_more",
+ "futures-util",
  "lettre",
  "rust_decimal",
  "serde",

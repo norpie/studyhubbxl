@@ -100,11 +100,18 @@ pub struct Coordinates {
 pub struct DeleteOrReset {
     pub identifier: Uuid,
     pub slug: String,
-    pub generation_time: DateTime<Utc>
+    pub generation_time: DateTime<Utc>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Favourite {
+pub struct Ip {
+    pub ip: String,
+    pub window_start: DateTime<Utc>,
+    pub requests: u32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Favourite {
     id: Uuid,
     location_id: Uuid,
     user_id: Uuid,
