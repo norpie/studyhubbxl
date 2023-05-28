@@ -40,30 +40,9 @@ async fn register_user(
     input: Json<RegisterUser>,
 ) -> Result<ApiResponse<Uuid>> {
     // Check existing user
-    let query_result = db
-        .query("SELECT * FROM user WHERE email = $email")
-        .bind(("email", &input.email))
-        .await;
-    match query_result {
-        Ok(mut response) => {
-            let user_result: surrealdb::Result<Option<User>> = response.take(0);
-            match user_result {
-                Ok(optional_user) => {
-                    if optional_user.is_some() {
-                        return Err(UserError::EmailUsed);
-                    }
-                }
-                Err(_err) => {
-                    //TODO: log
-                    return Err(UserError::InternalError);
-                }
-            }
-        }
-        Err(_err) => {
-            //TODO: log
-            return Err(UserError::InternalError);
-        }
-    };
+    if get_user(&db, &input.email).await?.is_some() {
+        return Err(UserError::EmailUsed);
+    }
     // Make user
     let salt = SaltString::generate(&mut OsRng);
     let hash = hash(input.password.clone(), &salt);
@@ -78,7 +57,10 @@ async fn register_user(
     if query_result.is_err() {
         return Err(UserError::InternalError);
     }
-    // Make session
+    Ok(ApiResponse::new(make_session(&db, id).await?))
+}
+
+async fn make_session(db: &Surreal<Client>, id: Uuid) -> Result<Uuid> {
     let session_id = Uuid::new_v4();
     let query_result = db
         .query("CREATE session content { user_id: $user_id, session_id: $session_id }")
@@ -88,7 +70,24 @@ async fn register_user(
     if query_result.is_err() {
         return Err(UserError::InternalError);
     }
-    Ok(ApiResponse::new(session_id))
+    Ok(session_id)
+}
+
+async fn get_user(db: &Surreal<Client>, email: &String) -> Result<Option<User>> {
+    let query_result = db
+        .query("SELECT * FROM user WHERE email = $email")
+        .bind(("email", email))
+        .await;
+    match query_result {
+        Ok(mut response) => {
+            let user_result: surrealdb::Result<Option<User>> = response.take(0);
+            match user_result {
+                Ok(optional_user) => Ok(optional_user),
+                Err(_err) => Err(UserError::InternalError),
+            }
+        }
+        Err(_err) => Err(UserError::InternalError),
+    }
 }
 
 //Request to login user
