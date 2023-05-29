@@ -2,8 +2,8 @@
 /*
 -textbalk
 - een search icontje
--na x-aantal sec. word er aan backend iets gevraagd 
--scroll functie -> 10 result op een panel 
+-na x-aantal sec. word er aan backend iets gevraagd
+-scroll functie -> 10 result op een panel
 -typscript
 */
 
@@ -20,7 +20,7 @@
 </template>
 <script lang="ts">
 
-import Panel from './components/Panel.vue';
+import Panel from './Panel.vue';
 
 export default {
     components: {
@@ -38,30 +38,29 @@ export default {
     },
     methods: {
         handleInput() {
-            clearTimeout(this.debounceTimer);
-            this.debounceTimer = setTimeout(() => {
-                this.loadMoreResults();
-            }, 1000);
+            //clearTimeout(this.debounceTimer);
+            //this.debounceTimer = setTimeout(() => {
+            //    this.loadMoreResults();
+            //}, 1000);
         },
         handleScroll() {
-            const container = document.querySelector('.search-results');
-            if (container == null) {
-                console.log("wrong");
-                return;
-            }
-            if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
-                this.loadMoreResults();
-            }
+            //const container = document.querySelector('.search-results');
+            //if (container == null) {
+            //    console.log("wrong");
+            //    return;
+            //}
+            //if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
+            //    this.loadMoreResults();
+            //}
         },
         loadMoreResults() {
-            console.log("test");
-            const end = this.scrollOffset + this.resultsPerPage;
-            this.visibleResults = this.results.slice(0, end);
-            this.scrollOffset += this.resultsPerPage;
+            //console.log("test");
+            //const end = this.scrollOffset + this.resultsPerPage;
+            //this.visibleResults = this.results.slice(0, end);
+            //this.scrollOffset += this.resultsPerPage;
         },
         performSearch() {
-            console.log("Performing search...");
-
+            //console.log("Performing search...");
         }
     },
 };
