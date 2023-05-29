@@ -1,10 +1,5 @@
 <template>
-    <mapbox-map
-        :accessToken="accessToken"
-        :center="center"
-        :zoom="zoom"
-        :maxBounds="bounds"
-        :auto-resize=true>
+    <mapbox-map :accessToken="accessToken" :center="center" :zoom="zoom" :maxBounds="bounds" :auto-resize=true>
         <slot>
         </slot>
         <mapbox-navigation-control position="top-left" />
@@ -14,11 +9,9 @@
 
 <script lang="ts">
 export default {
-    props: {
-        accessToken: String,
-    },
     data() {
         return {
+            accessToken: import.meta.env.VITE_MAPBOX,
             center: [4.363567, 50.844674],
             zoom: 11.5,
             bounds: [
