@@ -1,16 +1,8 @@
 
-/*
--textbalk
-- een search icontje
--na x-aantal sec. word er aan backend iets gevraagd
--scroll functie -> 10 result op een panel
--typscript
-*/
-
 <template>
     <Panel label="search">
 
-        <input class="search-bar" type="text" v-model="searchQuery" @input="handleInput" placeholder="Search...">
+        <input class="search-bar" type="text" v-model="searchQuery" id="search-box" @input="handleInput" placeholder="Search...">
         <div class="search-results" @scroll="handleScroll">
             <ul>
                 <li v-for="result in visibleResults" :key="result">{{ result }}</li>
@@ -21,6 +13,7 @@
 <script lang="ts">
 
 import Panel from './Panel.vue';
+import { showResults } from "@/results";
 
 export default {
     components: {
@@ -38,6 +31,7 @@ export default {
     },
     methods: {
         handleInput() {
+            showResults(true);
             //clearTimeout(this.debounceTimer);
             //this.debounceTimer = setTimeout(() => {
             //    this.loadMoreResults();

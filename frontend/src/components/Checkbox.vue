@@ -3,7 +3,8 @@
 export default {
     props: {
         label: String,
-        id: String
+        id: String,
+        class: String,
     },
     data() {
         return {
@@ -16,7 +17,7 @@ export default {
 <template>
     <div class="checkbox-wrapper">
         <label for="checkbox">{{ label }}</label>
-        <input type="checkbox" class="checkbox" :id="id" v-model="checked" />
+        <input type="checkbox" :class="class" :id="id" v-model="checked" />
     </div>
 </template>
 
