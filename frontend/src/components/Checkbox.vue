@@ -21,10 +21,10 @@ export default {
 </template>
 
 <style scoped>
-
-.checkbox-wrapper{
+.checkbox-wrapper {
     display: inline;
 }
+
 .checkbox:checked {
     background-color: black;
     appearance: none;
@@ -37,7 +37,7 @@ export default {
     border-style: solid;
     border-radius: 2px;
     border-width: 1px;
-    margin-top:5px;
+    margin-top: 5px;
     margin-left: 5px;
     margin-right: 5px;
     height: 10px;
