@@ -78,14 +78,16 @@ pub struct Location {
     pub attributes: Vec<String>,
     pub noise: String,
     pub address: String,
-    pub coordinates: Vec<Decimal>,
+    pub lat: Decimal,
+    pub long: Decimal,
 }
 
 impl Location {
     pub fn coords(&self) -> Coordinates {
         Coordinates {
             identifier: self.identifier,
-            coordinates: self.coordinates.clone(),
+            lat: self.lat,
+            long: self.long,
         }
     }
 }
@@ -93,7 +95,8 @@ impl Location {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Coordinates {
     pub identifier: Uuid,
-    pub coordinates: Vec<Decimal>,
+    pub lat: Decimal,
+    pub long: Decimal,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
