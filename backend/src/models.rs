@@ -66,6 +66,7 @@ pub struct User {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FilterItem {
+    identifier: String,
     path: String,
     display_name: String,
 }
