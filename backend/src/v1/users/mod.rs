@@ -21,8 +21,7 @@ pub fn scope() -> Scope {
 }
 
 // TODO: implement
-pub async fn parse_id(req: HttpRequest) -> Result<Uuid> {
-    let db = req.app_data::<Surreal<Client>>().unwrap();
+pub async fn parse_id(db: &Surreal<Client>, req: HttpRequest) -> Result<Uuid> {
     if let Some(cookie) = req.cookie("session") {
         let uuid_result = Uuid::from_str(cookie.value());
         match uuid_result {

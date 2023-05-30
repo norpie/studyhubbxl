@@ -27,7 +27,7 @@ async fn new_favourite(
     location_id: Path<Uuid>,
     req: HttpRequest,
 ) -> Result<ApiResponse<&'static str>> {
-    let id = super::parse_id(req).await?;
+    let id = super::parse_id(&db, req).await?;
     let query_result = db
         .query("CREATE favourite CONTENT { user_id: $user_id,  location_id: $location_id }")
         .bind(("user_id", id.to_string()))
@@ -48,7 +48,7 @@ async fn del_favourite(
     location_id: Path<Uuid>,
     req: HttpRequest,
 ) -> Result<ApiResponse<&'static str>> {
-    let id = super::parse_id(req).await?;
+    let id = super::parse_id(&db, req).await?;
     let query_result = db
         .query("DELETE favourite WHERE user_id = $user_id AND location_id = $location_id;")
         .bind(("user_id", id.to_string()))
@@ -70,7 +70,7 @@ async fn get_favourites(
     query: Query<ListFavourites>,
     req: HttpRequest,
 ) -> Result<Either<ApiResponse<Vec<Location>>, ApiResponse<Vec<Coordinates>>>> {
-    let id = super::parse_id(req).await?;
+    let id = super::parse_id(&db, req).await?;
     let limit = if let Some(limit) = query.limit {
         limit
     } else {
