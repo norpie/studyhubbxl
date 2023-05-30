@@ -82,7 +82,7 @@ async fn get_favourites(
         0
     };
     let query_result = db
-        .query("SELECT identifier, name, coordinates, address, attributes, location_type, noise FROM (SELECT *, (SELECT * FROM favourite WHERE user_id = $user_id LIMIT $limit START $start) as favourite FROM location SPLIT favourite) WHERE favourite.location_id = identifier;")
+        .query("SELECT identifier, name, lat, long, address, attributes, location_type, noise FROM (SELECT *, (SELECT * FROM favourite WHERE $user_id LIMIT $limit START $start) as favourite FROM location SPLIT favourite) WHERE favourite.location_id = identifier;")
         .bind(("user_id", id.to_string()))
         .bind(("limit", limit))
         .bind(("start", start))
