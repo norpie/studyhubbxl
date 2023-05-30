@@ -122,6 +122,6 @@ struct Favourite {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Session {
-    pub identifier: Uuid,
+    pub user_id: Uuid,
     pub session_id: Uuid,
 }
