@@ -2,9 +2,17 @@ use actix_web::{
     web::{self, Data},
     App, HttpServer,
 };
+use chrono::Utc;
+use models::DeleteOrReset;
+use std::{time::Duration};
 
 use std::io::Error;
-use surrealdb::{engine::remote::ws::Ws, opt::auth::Root, Surreal};
+use surrealdb::{
+    engine::remote::ws::{Client, Ws},
+    opt::auth::Root,
+    Surreal,
+};
+use tokio::{task, time::sleep};
 
 mod email;
 mod error;
@@ -13,8 +21,7 @@ mod models;
 
 mod v1;
 
-#[actix_web::main]
-async fn main() -> Result<(), Error> {
+async fn get_db() -> Surreal<Client> {
     //connection to server
     let result = Surreal::new::<Ws>("localhost:8000").await;
     if result.is_err() {
@@ -38,6 +45,43 @@ async fn main() -> Result<(), Error> {
     if let Err(err) = result {
         panic!("{:#?}", err);
     }
+    db
+}
+
+#[actix_web::main]
+async fn main() -> Result<(), Error> {
+    let db = get_db().await;
+
+    //Check accounts to delete (after 30 days, check every 10 mins)
+
+    task::spawn(async move {
+        let other_db = get_db().await;
+        loop {
+            //TODO: select udelete , loopen over de data dmv generation_time (30 dagen) en identifier bijhouden van die users
+            //in een Vec ofzo. Daarna die accounts deleten.
+            let query = other_db.select("udelete").await;
+            if query.is_err() {
+                continue;
+            }
+            let deletes: Vec<DeleteOrReset> = query.unwrap();
+            let mut ids = Vec::new();
+            for delete in deletes {
+                if Utc::now() - delete.generation_time > chrono::Duration::days(30) {
+                    ids.push(delete.identifier);
+                }
+            }
+            other_db.query("BEGIN TRANSACTION;");
+            for user in ids{
+                let accounts = other_db.query("DELETE udelete WHERE identifier = $identifier;")
+                .bind(("identifier", user)).await;
+                let result = other_db.query("DELETE users WHERE identifier = $identifier;")
+                .bind(("identifier", user)).await;
+            }
+            other_db.query("COMMIT TRANSACTION;");
+
+            sleep(Duration::new(600, 0)).await;
+        }
+    });
 
     HttpServer::new(move || {
         App::new()
