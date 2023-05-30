@@ -57,8 +57,7 @@ async fn main() -> Result<(), Error> {
     task::spawn(async move {
         let other_db = get_db().await;
         loop {
-            //TODO: select udelete , loopen over de data dmv generation_time (30 dagen) en identifier bijhouden van die users
-            //in een Vec ofzo. Daarna die accounts deleten.
+    
             let query = other_db.select("udelete").await;
             if query.is_err() {
                 continue;
@@ -72,10 +71,8 @@ async fn main() -> Result<(), Error> {
             }
             other_db.query("BEGIN TRANSACTION;");
             for user in ids{
-                let accounts = other_db.query("DELETE udelete WHERE identifier = $identifier;")
-                .bind(("identifier", user)).await;
-                let result = other_db.query("DELETE users WHERE identifier = $identifier;")
-                .bind(("identifier", user)).await;
+                other_db.query("DELETE udelete WHERE identifier = $identifier; DELETE users WHERE identifier = $identifier;")
+                .bind(("identifier", user)).await.ok();
             }
             other_db.query("COMMIT TRANSACTION;");
 
