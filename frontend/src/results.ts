@@ -33,7 +33,7 @@ export async function showResults(start: number, refresh: boolean): Promise<Loca
 
     if (refresh) {
 
-        let pins = await post<Object, Location[]>('http://127.0.0.1:8080/api/v1/locations?limit=9999999&coordinates_only=true&search=' + search + '&start=' + start, {
+        let pins = await post<Object, Location[]>('http://localhost:8080/api/v1/locations?limit=9999999&coordinates_only=true&search=' + search + '&start=' + start, {
             'location_types': location_types,
             'attributes': attributes,
             'noise': noise
@@ -41,7 +41,7 @@ export async function showResults(start: number, refresh: boolean): Promise<Loca
         //TODO: pins op map krijgen
     }
     try {
-        let results = await post<Object, Location[]>('http://127.0.0.1:8080/api/v1/locations?search=' + search + '&start=' + start, {
+        let results = await post<Object, Location[]>('http://localhost:8080/api/v1/locations?search=' + search + '&start=' + start, {
             'location_types': location_types,
             'attributes': attributes,
             'noise': noise
