@@ -1,40 +1,33 @@
 use crate::{error::UserError, models::Ip};
-use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform};
+use actix_web::{
+    dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
+    error,
+    Error,
+};
 use chrono::{Duration, Utc};
 use futures_util::future::LocalBoxFuture;
-use std::{future::{ready, Ready}, net::SocketAddr};
+use std::{
+    future::{ready, Ready},
+    net::SocketAddr,
+};
 use surrealdb::{engine::remote::ws::Client, Surreal};
 
-pub struct RateLimiter {
-    max_requests: u32,
-    duration: Duration,
-}
+pub struct RateLimiter {}
 
 impl RateLimiter {
-    pub fn new(max_requests: u32, duration: Duration) -> Self {
-        RateLimiter {
-            max_requests,
-            duration,
-        }
-    }
-}
-
-struct FixedWindowRateLimiter;
-
-impl FixedWindowRateLimiter {
-    pub fn new(max_requests: u32, duration: Duration) -> Self {
-        FixedWindowRateLimiter {}
+    pub fn new() -> Self {
+        RateLimiter {}
     }
 }
 
 impl<S, B> Transform<S, ServiceRequest> for RateLimiter
 where
-    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = UserError>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
     B: 'static,
 {
     type Response = ServiceResponse<B>;
-    type Error = UserError;
+    type Error = Error;
     type Transform = RateLimiterMiddleware<S>;
     type InitError = ();
     type Future = Ready<Result<Self::Transform, Self::InitError>>;
@@ -50,12 +43,12 @@ pub struct RateLimiterMiddleware<S> {
 
 impl<S, B> Service<ServiceRequest> for RateLimiterMiddleware<S>
 where
-    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = UserError>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
     B: 'static,
 {
     type Response = ServiceResponse<B>;
-    type Error = UserError;
+    type Error = Error;
     type Future = LocalBoxFuture<'static, Result<Self::Response, Self::Error>>;
 
     forward_ready!(service);
@@ -146,7 +139,7 @@ where
                 let result = fut.await?;
                 Ok(result)
             } else {
-                Err(UserError::TooManyRequests)
+                Err(error::ErrorTooManyRequests(UserError::TooManyRequests))
             }
         })
     }
