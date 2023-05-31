@@ -1,7 +1,6 @@
 import { post } from "@/fetch";
 import type Location from "./models/location";
-import FilterPanelVue from "./components/FilterPanel.vue";
-import SearchPanelVue from "./components/SearchPanel.vue";
+
 export async function showResults(start: number, refresh: boolean): Promise<Location[]> {
     //attributes
     let attribute_checkboxes = document.querySelectorAll(".attribute:checked");
