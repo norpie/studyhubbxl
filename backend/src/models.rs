@@ -46,11 +46,15 @@ impl<T: Serialize> Responder for ApiResponse<T> {
         match result {
             Ok(json) => HttpResponseBuilder::new(StatusCode::from_u16(self.status).unwrap())
                 .insert_header(("Access-Control-Allow-Origin", "http://localhost:5173"))
+                .insert_header(("Access-Control-Allow-Credentials", "true"))
                 .content_type(ContentType::json())
                 .body(json),
             Err(_e) => {
                 // TODO: log
-                HttpResponse::InternalServerError().body("")
+                HttpResponse::InternalServerError()
+                    .insert_header(("Access-Control-Allow-Origin", "http://localhost:5173"))
+                    .insert_header(("Access-Control-Allow-Credentials", "true"))
+                    .body("")
             }
         }
     }
