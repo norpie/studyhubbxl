@@ -11,14 +11,14 @@ import { showResults } from "@/results";
 export default {
   async mounted() {
     try {
-      this.items_place = await get<FilterItem[]>('http://127.0.0.1:8080/api/v1/filters/location_type');
-      this.items_attributes = await get<FilterItem[]>('http://127.0.0.1:8080/api/v1/filters/items_attributes');
-      this.items_volume = await get<FilterItem[]>('http://127.0.0.1:8080/api/v1/filters/item_volume');
+      this.items_place = await get<FilterItem[]>('http://localhost:8080/api/v1/filters/location_type');
+      this.items_attributes = await get<FilterItem[]>('http://localhost:8080/api/v1/filters/attribute');
+      this.items_volume = await get<FilterItem[]>('http://localhost:8080/api/v1/filters/noise');
     }
     catch (error) {
       console.error(error);;
     }
-    //http://127.0.0.1:8080/api/v1/filters/location_types
+    //http://localhost:8080/api/v1/filters/location_types
   },
   data() {
     return {
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     /*search() {
-      // die here 
+      // die here
       fetchResults
       (this.selectedPlaces, this.selectedPlaces, this.selectedVolume)
         .then(results => {
