@@ -58,7 +58,7 @@ async fn main() -> Result<(), Error> {
     task::spawn(async move {
         let other_db = get_db().await;
         loop {
-    
+
             let query = other_db.select("udelete").await;
             if query.is_err() {
                 continue;
@@ -84,7 +84,7 @@ async fn main() -> Result<(), Error> {
     HttpServer::new(move || {
         App::new()
             .app_data(Data::new(db.clone()))
-            .service(web::scope("/api").service(web::scope("/v1").service(v1::scope()))).wrap(RateLimiter::new())
+            .service(web::scope("/api").service(web::scope("/v1").service(v1::scope())))/*.wrap(RateLimiter::new())*/
     })
     .bind(("127.0.0.1", 8080))?
     .run()
