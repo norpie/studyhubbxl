@@ -2,7 +2,7 @@
     <mapbox-map :accessToken="accessToken" :center="center" :zoom="zoom" :maxBounds="bounds" :auto-resize=true>
         <slot>
         </slot>
-        <mapbox-navigation-control position="top-left" />
+        <!--<mapbox-navigation-control position="top-left"  />-->
         <!--<mapbox-geolocate-control />-->
     </mapbox-map>
 </template>
@@ -22,4 +22,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.mapbox-map{
+    position: absolute;
+}
+</style>

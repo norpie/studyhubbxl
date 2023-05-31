@@ -1,73 +1,9 @@
-<style scoped>
-.logo-panel-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 200px;
-    transition: transform 0.3s ease-in-out;
-}
-
-.expanded {
-    transform: translateX(-0%);
-}
-
-.logo-panel {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-color: #2F86A6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-}
-
-.logo {
-    width: 80px;
-    height: 80px;
-}
-
-.horizontal-bar-wrapper {
-    position: relative;
-    margin-left: 10px;
-}
-
-.horizontal-bar {
-    display: flex;
-    justify-content: space-evenly;
-    width: 600px;
-    height: 40px;
-    background-color: #ccc;
-}
-</style>
-
-<script lang="ts">
-export default {
-    props: {
-        logoSrc: {
-            type: String,
-            required: true
-        }
-    },
-    data() {
-        return {
-            isExpanded: false
-        };
-    },
-    methods: {
-        toggleExpansion() {
-            this.isExpanded = !this.isExpanded;
-        }
-    }
-};
-</script>
-
-<div class="logo-panel-container" :class="{ 'expanded': isExpanded }">
+<template>
+  <div class="logo-panel-container" :class="{ 'expanded': isExpanded }">
     <div class="logo-panel" @click="toggleExpansion">
       <img :src="logoSrc" alt="Logo" class="logo" />
     </div>
-<div class="horizontal-bar-wrapper" v-if="isExpanded">
+    <div class="horizontal-bar-wrapper" v-if="isExpanded">
       <div class="horizontal-bar">
         <Panel class="Faq" label="Faq">
           <p>
@@ -223,7 +159,7 @@ export default {
           </p>
         </Panel>
 
-        <Panel class="Login" v-if="!isSignUpVisible && !isUserLoggedin && !isForgot" label="Login">
+        <Panel class="Login" id="login" v-if="!isSignUpVisible && !isUserLoggedin && !isForgot" label="Login">
           <br>
           <br />
           <h1>Login</h1>
@@ -245,7 +181,7 @@ export default {
           <p>Not signed up yet?</p>
           <Button label="Sign Up!" @click="toggleSignUp" />
         </Panel>
-        <Panel class="Signup" v-else-if="isSignUpVisible && !isUserLoggedin" label="Sign Up">
+        <Panel class="Signup" id="signup" v-else-if="isSignUpVisible && !isUserLoggedin" label="Sign Up">
           <br />
           <h1>Sign Up</h1>
           <hr class="black-bar" />
@@ -259,7 +195,7 @@ export default {
           <br />
           <Button label="Sign in" v-if="isSignUpVisible" @click="handleSignUp" />
           <br />
-          <p>Already have an account? <a href="#" @click="toggleSignUp">Sign in</a></p>
+          <p>Already have an account? <a href="#" @click="toggleSignUp">Log in</a></p>
         </Panel>
         <Panel class="Account" label="Account" v-else-if="isUserLoggedin">
           <h1>Account</h1>
@@ -270,7 +206,7 @@ export default {
           <br>
           <Button id="logout" label="Logout" @click="toggleLoggedIn" />
         </Panel>
-        <Panel class="ForgotPassword" label="Forgot Password" v-if="isForgot">
+        <Panel class="ForgotPassword" id="forgotpassword" label="Forgot Password" v-if="isForgot">
           <br />
           <Textfield id="emailforgotpassword" label="email" />
           <Button label="Reset Password" @click="handleForgot" />
@@ -282,118 +218,123 @@ export default {
 
 <style scoped>
 .Faq {
-    opacity: 2;
-    width: 33%;
+  opacity: 2;
+  width: 33%;
 }
 
 .Faq.expanded {
-    opacity: 2;
-    width: 450px;
+  opacity: 2;
+  width: 450px;
 }
 
 .Privacy {
-    opacity: 2;
-    width: 33%;
+  opacity: 2;
+  width: 33%;
 }
 
 .Privacy.expanded {
-    opacity: 2;
-    width: 450px;
+  opacity: 2;
+  width: 450px;
 }
 
 .Login {
-    opacity: 2;
-    width: 33%;
+  opacity: 2;
+  width: 33%;
 }
 
 .Login.expanded {
-    opacity: 2;
-    display: flex;
+  opacity: 2;
+  display: flex;
 
-    width: 450px;
+  width: 450px;
 }
 
 .Signup {
-    opacity: 2;
-    width: 33%;
+  opacity: 2;
+  width: 33%;
 }
 
 .Signup.expanded {
-    opacity: 2;
-    width: 450px;
+  opacity: 2;
+  width: 450px;
 }
 
 .Account {
-    opacity: 2;
-    width: 33%;
+  opacity: 2;
+  width: 33%;
 }
 
 .Account.expanded {
-    opacity: 2;
-    width: 450px;
+  opacity: 2;
+  width: 450px;
 }
 
 .ForgotPassword {
-    opacity: 2;
-    width: 33%;
+  opacity: 2;
+  width: 33%;
 }
 
 .ForgotPassword.expanded {
-    opacity: 2;
-    width: 450px;
+  opacity: 2;
+  width: 450px;
 
 }
 
 .logo-panel-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 200px;
-    transition: transform 0.3s ease-in-out;
+
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 200px;
+  transition: transform 0.3s ease-in-out;
+  margin-top: -50px;
 }
 
 .black-bar {
-    border: none;
-    height: 2px;
-    background-color: black;
+  border: none;
+  height: 2px;
+  background-color: black;
 }
 
 .expanded {
-    transform: translateX(-0%);
+  transform: translateX(-0%);
 }
 
 .logo-panel {
-    border: 1px solid black;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background-color: #2F86A6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-width: 1px;
-    border-color: black;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
+  border: 1px solid black;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #34BE82;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-width: 1px;
+  border-color: black;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .logo {
-    width: 80px;
-    height: 80px;
+  width: 80px;
+  height: 80px;
 }
 
 .horizontal-bar-wrapper {
-    position: relative;
-    margin-left: 10px;
+  position: relative;
+  margin-left: 10px;
 }
 
 .horizontal-bar {
-    border-radius: 8px;
-    display: flex;
-    border: 2px solid black;
-    width: 600px;
-    height: 40px;
-    background-color: #2F86A6;
+  border-radius: 8px;
+  display: flex;
+  border: 2px solid black;
+  width: 600px;
+  height: 40px;
+  background-color: #34BE82;
 
 }
 </style>
@@ -412,6 +353,7 @@ export default {
       default: '/logo.png'
     }
   },
+
   data() {
     return {
       isExpanded: false,
@@ -430,7 +372,7 @@ export default {
       });
     },
 
-   async handleLogin() {
+    async handleLogin() {
       let email = document.getElementById("email").value;
       let password = document.getElementById("password").value;
       let keepmeloggedin = document.getElementById("keepmeloggedin").checked;
@@ -447,8 +389,8 @@ export default {
       let emailsignin = document.getElementById("email-signin").value;
       let passwordsignin = document.getElementById("password-signin").value;
       let confirmpassword = document.getElementById("confirm-password").value;
-      if(passwordsignin!=confirmpassword){
-        return(console.error("Passwords not matching"));
+      if (passwordsignin != confirmpassword) {
+        return (console.error("Passwords not matching"));
 
 
       }
@@ -462,12 +404,26 @@ export default {
     },
     toggleSignUp() {
       this.isSignUpVisible = !this.isSignUpVisible;
+      if (this.isSignUpVisible) {
+        setTimeout(() => {
+          document.getElementById("signup")?.children[0]?.click();
+        }, 1);
+      } else {
+        setTimeout(() => {
+          document.getElementById("login")?.children[0]?.click();
+        }, 1);
+      }
     },
     toggleLoggedIn() {
       this.isUserLoggedin = !this.isUserLoggedin;
     },
     toggleForgot() {
       this.isForgot = !this.isForgot;
+      if (this.isForgot) {
+        setTimeout(() => {
+          document.getElementById("forgotpassword")?.children[0]?.click();
+        }, 1);
+      }
     }
   },
 

@@ -60,7 +60,7 @@ export default {
     /*border-radius: 20px;
     overflow: hidden;*/
     background: none;
-
+    width: 140px;
 
 }
 
@@ -81,4 +81,5 @@ export default {
     max-height: 300px;
     overflow-y: auto;
 }
+
 </style>

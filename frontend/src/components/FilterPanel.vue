@@ -72,20 +72,20 @@ export default {
 <template>
   <Panel label="Filter">
     <p>Places</p>
-    <li v-for="item in items_place" class="">
-      <Checkbox :label="item.display_name" @click="search" :id="item.path" class="location_type" />
+    <p v-for="item in items_place">
+      <Checkbox :label="item.display_name" />
       <Icon :src="item.path" />
-    </li>
+    </p>
     <p>Attributes</p>
-    <li v-for="item in items_attributes">
-      <Checkbox :label="item.display_name" @click="search" :id="item.path" class="attribute" />
+    <p v-for="item in items_attributes">
+      <Checkbox :label="item.display_name" />
       <Icon :src="item.path" />
-    </li>
-    <p>Noise</p>
-    <li v-for="item in items_volume">
-      <Checkbox :label="item.display_name" @click="search" :id="item.path" class="noise" />
+    </p>
+    <p>Volume</p>
+    <p v-for="item in items_volume">
+      <Checkbox :label="item.display_name" />
       <Icon :src="item.path" />
-    </li>
+    </p>
   </Panel>
 </template>
 
