@@ -1,10 +1,10 @@
 <template>
     <Panel label="favourites">
-        <list class="list" @scroll="handleScroll">
-            <Card class="card-fav" v-for="location in results" :key="location.id" :label="location.name">
+        <List class="list" @scroll="handleScroll">
+            <Card class="card-fav" v-for="location in results" :id="location.identifier" :key="location.identifier" :label="location.name">
                 <Icon src="search-icon.png" />
             </Card>
-        </list>
+        </List>
     </Panel>
 </template>
 
@@ -15,13 +15,20 @@
 </style>
 <script lang="ts">
 
+import Panel from './Panel.vue';
+import Icon from './Icon.vue';
+import Card from './Card.vue';
+import List from './List.vue';
+import { get } from '../fetch';
+import type Location from '../models/location';
+
 export default {
     components: { Icon, Panel, Card, List },
 
     data() {
         return {
             searchQuery: '',
-            results: [] as Location[],
+            results: [] as any[],
             visibleResults: [] as Location[],
             scrollOffset: 0,
             resultsPerPage: 10,
@@ -36,7 +43,6 @@ export default {
         handleScroll() {
             const container = document.querySelector('.list');
             if (container == null) {
-                console.log("wrong");
                 return;
             }
             if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
@@ -57,25 +63,13 @@ export default {
                     mode: "cors",
                     credentials: "include"
                 });
-                console.log(response);
-                this.results=response;  
+                this.results = this.results.concat(response);
             } catch (error) {
                 console.error(error);
             }
             this.fetching = false;
         },
-
     }
-
 };
-
-
-import Panel from './Panel.vue';
-import Icon from './Icon.vue';
-import Card from './Card.vue';
-import List from './List.vue';
-import { get } from '../fetch';
-import type Location from '../models/location';
-
 
 </script>

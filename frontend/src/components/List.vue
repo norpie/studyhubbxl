@@ -16,7 +16,7 @@ export default {
 
 <style scoped>
 .list-wrapper {
-    height: 330px;
+    height: 60vh;
     overflow-y: scroll;
     justify-content: center;
 }
