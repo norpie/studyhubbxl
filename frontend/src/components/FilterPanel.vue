@@ -5,6 +5,8 @@ import Checkbox from './Checkbox.vue'
 import Icon from './Icon.vue'
 import { get } from "../fetch";
 import type FilterItem from "../models/filteritem";
+import { showResults } from "@/results";
+
 
 export default {
   async mounted() {
@@ -61,7 +63,7 @@ export default {
         })
     }*/
     search() {
-      console.log("teset");
+      showResults(true);
     },
   },
 };
@@ -71,17 +73,17 @@ export default {
   <Panel label="Filter">
     <p>Places</p>
     <li v-for="item in items_place" class="">
-      <Checkbox :label="item.display_name" @click="search" />
+      <Checkbox :label="item.display_name" @click="search" :id="item.path" class="location_type" />
       <Icon :src="item.path" />
     </li>
     <p>Attributes</p>
     <li v-for="item in items_attributes">
-      <Checkbox :label="item.display_name" @click="search" />
+      <Checkbox :label="item.display_name" @click="search" :id="item.path" class="attribute" />
       <Icon :src="item.path" />
     </li>
-    <p>Volume</p>
+    <p>Noise</p>
     <li v-for="item in items_volume">
-      <Checkbox :label="item.display_name" @click="search" />
+      <Checkbox :label="item.display_name" @click="search" :id="item.path" class="noise" />
       <Icon :src="item.path" />
     </li>
   </Panel>
