@@ -1,6 +1,8 @@
-import { get } from "@/fetch";
+import { post } from "@/fetch";
+import type Location from "./models/location";
 import FilterPanelVue from "./components/FilterPanel.vue";
-export async function showResults(refresh: boolean) {
+import SearchPanelVue from "./components/SearchPanel.vue";
+export async function showResults(start: number, refresh: boolean): Promise<Location[]> {
     //attributes
     let attribute_checkboxes = document.querySelectorAll(".attribute:checked");
     let attributes = [] as string[];
@@ -26,7 +28,30 @@ export async function showResults(refresh: boolean) {
     //check the textbox
     let possible_input = document.getElementById("search-box");
     if (possible_input == null) {
-        return;
+        return [];
     }
-    console.log((possible_input as HTMLInputElement).value);
+    let search = (possible_input as HTMLInputElement).value;
+
+    if (refresh) {
+
+        let pins = await post<Object, Location[]>('http://127.0.0.1:8080/api/v1/locations?limit=9999999&coordinates_only=true&search=' + search + '&start=' + start, {
+            'location_types': location_types,
+            'attributes': attributes,
+            'noise': noise
+        });
+        //TODO: pins op map krijgen
+    }
+    try {
+        let results = await post<Object, Location[]>('http://127.0.0.1:8080/api/v1/locations?search=' + search + '&start=' + start, {
+            'location_types': location_types,
+            'attributes': attributes,
+            'noise': noise
+        });
+        return results
+    }
+    catch (error) {
+        console.log(error);
+    }
+
+    return [] as Location[];
 }

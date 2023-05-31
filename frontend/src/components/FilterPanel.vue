@@ -63,7 +63,7 @@ export default {
         })
     }*/
     search() {
-      showResults(true);
+      showResults(0, true);
     },
   },
 };

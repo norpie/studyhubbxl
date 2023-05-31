@@ -5,7 +5,7 @@
         <input class="search-bar" type="text" v-model="searchQuery" id="search-box" @input="handleInput" placeholder="Search...">
         <div class="search-results" @scroll="handleScroll">
             <ul>
-                <li v-for="result in visibleResults" :key="result">{{ result }}</li>
+                <li v-for="result in visibleResults" :key="result.id">{{ result }}</li>
             </ul>
         </div>
     </Panel>
@@ -22,22 +22,23 @@ export default {
     data() {
         return {
             searchQuery: '',
-            results: [],
-            visibleResults: [],
+            results: [] as Location[],
+            visibleResults: [] as Location[],
             scrollOffset: 0,
             resultsPerPage: 10,
             debounceTimer: 0,
         };
     },
     methods: {
-        handleInput() {
-            showResults(true);
+       async handleInput() {
+            this.results = await showResults(0, true);
             //clearTimeout(this.debounceTimer);
             //this.debounceTimer = setTimeout(() => {
             //    this.loadMoreResults();
             //}, 1000);
         },
-        handleScroll() {
+       async handleScroll() {
+            this.results = await showResults(this.results.length, false);
             //const container = document.querySelector('.search-results');
             //if (container == null) {
             //    console.log("wrong");
@@ -46,15 +47,6 @@ export default {
             //if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
             //    this.loadMoreResults();
             //}
-        },
-        loadMoreResults() {
-            //console.log("test");
-            //const end = this.scrollOffset + this.resultsPerPage;
-            //this.visibleResults = this.results.slice(0, end);
-            //this.scrollOffset += this.resultsPerPage;
-        },
-        performSearch() {
-            //console.log("Performing search...");
         }
     },
 };
