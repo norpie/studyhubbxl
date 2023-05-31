@@ -3,6 +3,7 @@ use actix_web::{
     App, HttpServer,
 };
 use chrono::Utc;
+use limiter::RateLimiter;
 use models::DeleteOrReset;
 use std::{time::Duration};
 
@@ -83,7 +84,7 @@ async fn main() -> Result<(), Error> {
     HttpServer::new(move || {
         App::new()
             .app_data(Data::new(db.clone()))
-            .service(web::scope("/api").service(web::scope("/v1").service(v1::scope())))
+            .service(web::scope("/api").service(web::scope("/v1").service(v1::scope()))).wrap(RateLimiter::new())
     })
     .bind(("127.0.0.1", 8080))?
     .run()
