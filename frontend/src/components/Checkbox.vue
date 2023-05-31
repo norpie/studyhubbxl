@@ -3,7 +3,8 @@
 export default {
     props: {
         label: String,
-        id: String
+        id: String,
+        class: String,
     },
     data() {
         return {
@@ -16,15 +17,15 @@ export default {
 <template>
     <div class="checkbox-wrapper">
         <label for="checkbox">{{ label }}</label>
-        <input type="checkbox" class="checkbox" :id="id" v-model="checked" />
+        <input type="checkbox" :class="class" :id="id" v-model="checked" />
     </div>
 </template>
 
 <style scoped>
-
-.checkbox-wrapper{
+.checkbox-wrapper {
     display: inline;
 }
+
 .checkbox:checked {
     background-color: black;
     appearance: none;
@@ -37,7 +38,7 @@ export default {
     border-style: solid;
     border-radius: 2px;
     border-width: 1px;
-    margin-top:5px;
+    margin-top: 5px;
     margin-left: 5px;
     margin-right: 5px;
     height: 10px;

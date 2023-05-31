@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import FilterPanel from './components/FilterPanel.vue';
+import SearchPanel from './components/SearchPanel.vue';
 </script>
 
 <template>
+    <FilterPanel />
     <SearchPanel />
 </template>
 
