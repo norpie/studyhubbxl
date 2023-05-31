@@ -11,10 +11,10 @@
 
 <style scoped>
 .Panel {
-    opacity: 0.4;
-    background-color: #2F86A6;
+    opacity: 0.7;
+    background-color: #34BE82 ;
     border-radius: 10px;
-    width: 300px;
+    width: 400px;
     text-align: center;
     font-size: larger;
     text-transform: uppercase;
@@ -39,12 +39,12 @@
 }
 
 .Panel:hover {
-    opacity: 0.6;
+    opacity: 0.9;
 
 }
 
 .expanded {
-    height: 50vh;
+    height: 65vh;
     max-height: none;
 }
 

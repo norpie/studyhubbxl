@@ -35,20 +35,20 @@ export default {
 <template>
   <Panel label="Filter">
     <p>Places</p>
-    <li v-for="item in items_place">
+    <p v-for="item in items_place">
       <Checkbox :label="item.display_name" />
       <Icon :src="item.path" />
-    </li>
+    </p>
     <p>Attributes</p>
-    <li v-for="item in items_attributes">
+    <p v-for="item in items_attributes">
       <Checkbox :label="item.display_name" />
       <Icon :src="item.path" />
-    </li>
+    </p>
     <p>Volume</p>
-    <li v-for="item in items_volume">
+    <p v-for="item in items_volume">
       <Checkbox :label="item.display_name" />
       <Icon :src="item.path" />
-    </li>
+    </p>
   </Panel>
 </template>
 
