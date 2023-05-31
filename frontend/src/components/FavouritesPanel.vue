@@ -4,7 +4,6 @@
             <Card class="card-fav" v-for="location in results" :key="location.id" :label="location.name">
                 <Icon src="search-icon.png" />
             </Card>
-
         </list>
     </Panel>
 </template>
@@ -54,8 +53,12 @@ export default {
             this.scrollOffset += this.resultsPerPage;
             try {
                 let url = 'http://localhost:8080/api/v1/users/favourites?limit=10&start=' + this.results.length;
-                const response = await get<Location[]>(url);
+                const response = await get<Location[]>(url, {
+                    mode: "cors",
+                    credentials: "include"
+                });
                 console.log(response);
+                this.results=response;  
             } catch (error) {
                 console.error(error);
             }
