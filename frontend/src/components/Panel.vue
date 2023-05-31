@@ -74,6 +74,9 @@ export default defineComponent({
                 this.isExpanded = !this.isExpanded;
             }
         },
+        toggle() {
+            this.isExpanded = !this.isExpanded;
+        }
     },
 });
 </script>

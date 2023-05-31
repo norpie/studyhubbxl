@@ -25,6 +25,5 @@ export default {
 <style scoped>
 .mapbox-map{
     position: absolute;
-    z-index: -1;
 }
 </style>

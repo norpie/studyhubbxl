@@ -159,7 +159,7 @@
           </p>
         </Panel>
 
-        <Panel class="Login" v-if="!isSignUpVisible && !isUserLoggedin && !isForgot" label="Login">
+        <Panel class="Login" id="login" v-if="!isSignUpVisible && !isUserLoggedin && !isForgot" label="Login">
           <br>
           <br />
           <h1>Login</h1>
@@ -181,7 +181,7 @@
           <p>Not signed up yet?</p>
           <Button label="Sign Up!" @click="toggleSignUp" />
         </Panel>
-        <Panel class="Signup" v-else-if="isSignUpVisible && !isUserLoggedin" label="Sign Up">
+        <Panel class="Signup" id="signup" v-else-if="isSignUpVisible && !isUserLoggedin" label="Sign Up">
           <br />
           <h1>Sign Up</h1>
           <hr class="black-bar" />
@@ -195,7 +195,7 @@
           <br />
           <Button label="Sign in" v-if="isSignUpVisible" @click="handleSignUp" />
           <br />
-          <p>Already have an account? <a href="#" @click="toggleSignUp">Sign in</a></p>
+          <p>Already have an account? <a href="#" @click="toggleSignUp">Log in</a></p>
         </Panel>
         <Panel class="Account" label="Account" v-else-if="isUserLoggedin">
           <h1>Account</h1>
@@ -206,7 +206,7 @@
           <br>
           <Button id="logout" label="Logout" @click="toggleLoggedIn" />
         </Panel>
-        <Panel class="ForgotPassword" label="Forgot Password" v-if="isForgot">
+        <Panel class="ForgotPassword" id="forgotpassword" label="Forgot Password" v-if="isForgot">
           <br />
           <Textfield id="emailforgotpassword" label="email" />
           <Button label="Reset Password" @click="handleForgot" />
@@ -281,11 +281,16 @@
 }
 
 .logo-panel-container {
+
+  position: fixed;
+  top: 10px;
+  right: 10px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   height: 200px;
   transition: transform 0.3s ease-in-out;
+  margin-top: -50px;
 }
 
 .black-bar {
@@ -303,7 +308,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background-color: #2F86A6;
+  background-color: #34BE82;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -329,7 +334,7 @@
   border: 2px solid black;
   width: 600px;
   height: 40px;
-  background-color: #2F86A6;
+  background-color: #34BE82;
 
 }
 </style>
@@ -348,6 +353,7 @@ export default {
       default: '/logo.png'
     }
   },
+
   data() {
     return {
       isExpanded: false,
@@ -398,12 +404,26 @@ export default {
     },
     toggleSignUp() {
       this.isSignUpVisible = !this.isSignUpVisible;
+      if (this.isSignUpVisible) {
+        setTimeout(() => {
+          document.getElementById("signup")?.children[0]?.click();
+        }, 1);
+      } else {
+        setTimeout(() => {
+          document.getElementById("login")?.children[0]?.click();
+        }, 1);
+      }
     },
     toggleLoggedIn() {
       this.isUserLoggedin = !this.isUserLoggedin;
     },
     toggleForgot() {
       this.isForgot = !this.isForgot;
+      if (this.isForgot) {
+        setTimeout(() => {
+          document.getElementById("forgotpassword")?.children[0]?.click();
+        }, 1);
+      }
     }
   },
 
