@@ -135,10 +135,11 @@ export default defineComponent({
             }
             else {
                 try {
-                    await delete_<string>('http://localhost:8080/api/v1/users/favourites/' + this.id, {
+                    let result = await delete_<string>('http://localhost:8080/api/v1/users/favourites/' + this.id, {
                         mode: "cors",
                         credentials: "include",
                     });
+                    console.log(result);
                     let new_favourites = [];
                     for (let i = 0; i < store.favourites.length; i++) {
                         if (store.favourites[i].identifier != this.id) {

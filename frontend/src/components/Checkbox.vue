@@ -18,7 +18,7 @@ export default {
 <template>
     <div class="checkbox-wrapper">
         <input type="checkbox" :class="class" :id="id" :checked="checked" />
-        <Icon :src="src" />
+        <Icon v-if="src != null" :src="src" />
         <label for="checkbox">{{ label }}</label>
     </div>
 </template>
