@@ -15,15 +15,15 @@ use crate::{error::Result, models::User};
 use crate::{error::UserError, models::ApiResponse};
 
 #[derive(Debug, Deserialize)]
-struct RegisterUser {
+struct FormUser {
     email: String,
     password: String,
 }
 
-#[derive(Debug, Deserialize)]
-struct LoginUser {
-    email: String,
-    password: String,
+pub fn scope() -> Scope {
+    web::scope("/auth")
+        .service(register_user)
+        .service(login_user)
 }
 
 fn hash(password: &String, salt: &SaltString) -> String {
@@ -37,7 +37,7 @@ fn hash(password: &String, salt: &SaltString) -> String {
 #[post("/register")]
 async fn register_user(
     db: Data<Surreal<Client>>,
-    input: Json<RegisterUser>,
+    input: Json<FormUser>,
 ) -> Result<ApiResponse<Uuid>> {
     // Check existing user
     if get_user(&db, &input.email).await?.is_some() {
@@ -48,8 +48,8 @@ async fn register_user(
     let hash = hash(&input.password, &salt);
     let id = Uuid::new_v4();
     let query_result = db
-        .query("CREATE user CONTENT { id: $id, email: $email, password: $password, salt: $salt }")
-        .bind(("id", &id))
+        .query("CREATE user CONTENT { identifier: $id, email: $email, password: $password, salt: $salt }")
+        .bind(("id", &id.to_string()))
         .bind(("email", &input.email))
         .bind(("password", &hash))
         .bind(("salt", &salt.to_string()))
@@ -64,8 +64,8 @@ async fn make_session(db: &Surreal<Client>, id: Uuid) -> Result<Uuid> {
     let session_id = Uuid::new_v4();
     let query_result = db
         .query("CREATE session content { user_id: $user_id, session_id: $session_id }")
-        .bind(("user_id", id))
-        .bind(("session_id", session_id))
+        .bind(("user_id", id.to_string()))
+        .bind(("session_id", session_id.to_string()))
         .await;
     if query_result.is_err() {
         return Err(UserError::InternalError);
@@ -83,10 +83,14 @@ async fn get_user(db: &Surreal<Client>, email: &String) -> Result<Option<User>> 
             let user_result: surrealdb::Result<Option<User>> = response.take(0);
             match user_result {
                 Ok(optional_user) => Ok(optional_user),
-                Err(_err) => Err(UserError::InternalError),
+                Err(_err) => {
+                    Err(UserError::InternalError)
+                }
             }
         }
-        Err(_err) => Err(UserError::InternalError),
+        Err(_err) => {
+            Err(UserError::InternalError)
+        }
     }
 }
 
@@ -94,7 +98,7 @@ async fn get_user(db: &Surreal<Client>, email: &String) -> Result<Option<User>> 
 #[post("/login")]
 async fn login_user(
     db: Data<Surreal<Client>>,
-    input: Json<LoginUser>,
+    input: Json<FormUser>,
 ) -> Result<ApiResponse<Uuid>> {
     let user_optional = get_user(&db, &input.email).await?;
     if user_optional.is_none() {
@@ -105,11 +109,5 @@ async fn login_user(
     if hash != user.password {
         return Err(UserError::WrongPasswordOrUsername);
     }
-    Ok(ApiResponse::new(make_session(&db, user.id).await?))
-}
-
-pub fn scope() -> Scope {
-    web::scope("/auth")
-        .service(login_user)
-        .service(register_user)
+    Ok(ApiResponse::new(make_session(&db, user.identifier).await?))
 }

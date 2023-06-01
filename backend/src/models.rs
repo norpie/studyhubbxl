@@ -58,7 +58,7 @@ impl<T: Serialize> Responder for ApiResponse<T> {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-    pub id: Uuid,
+    pub identifier: Uuid,
     pub email: String,
     pub password: String,
     pub salt: String,
