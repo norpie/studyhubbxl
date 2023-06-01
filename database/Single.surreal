@@ -1,0 +1,102 @@
+-- ------------------------------
+-- OPTION
+-- ------------------------------
+
+OPTION IMPORT;
+
+-- ------------------------------
+-- TABLE: attribute
+-- ------------------------------
+
+DEFINE TABLE attribute SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: favourite
+-- ------------------------------
+
+DEFINE TABLE favourite SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: location
+-- ------------------------------
+
+DEFINE TABLE location SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: location_type
+-- ------------------------------
+
+DEFINE TABLE location_type SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: noise
+-- ------------------------------
+
+DEFINE TABLE noise SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: session
+-- ------------------------------
+
+DEFINE TABLE session SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: user
+-- ------------------------------
+
+DEFINE TABLE user SCHEMAFULL;
+
+DEFINE FIELD email ON user TYPE string ASSERT $value != NONE AND is::email($value);
+DEFINE FIELD identifier ON user TYPE string ASSERT $value != NONE;
+DEFINE FIELD password ON user TYPE string ASSERT $value != NONE;
+DEFINE FIELD salt ON user TYPE string ASSERT $value != NONE;
+
+BEGIN TRANSACTION;
+-- ------------------------------
+-- TABLE DATA: attribute
+-- ------------------------------
+
+UPDATE attribute:6ky3pvwdy2pwy4d3axyx CONTENT { display_name: 'Sockets', id: attribute:6ky3pvwdy2pwy4d3axyx, identifier: 'socket', path: 'socket-icon.png' };
+UPDATE attribute:7pjjfe6i8f2yqrmwbo8m CONTENT { display_name: 'Co-working', id: attribute:7pjjfe6i8f2yqrmwbo8m, identifier: 'coworking', path: 'coworking-icon.png' };
+UPDATE attribute:cvkjeopk4zi1ez8vq47i CONTENT { display_name: 'Wifi', id: attribute:cvkjeopk4zi1ez8vq47i, identifier: 'wifi', path: 'wifi-icon.png' };
+UPDATE attribute:d06xsha4vo016duc2j20 CONTENT { display_name: 'Printer', id: attribute:d06xsha4vo016duc2j20, identifier: 'printer', path: 'printer-icon.png' };
+UPDATE attribute:koc1f0gcudwylxnrbalb CONTENT { display_name: 'Reserve', id: attribute:koc1f0gcudwylxnrbalb, identifier: 'reserve', path: 'reserve-icon.png' };
+UPDATE attribute:t5qq1th1jm3edoqkryz7 CONTENT { display_name: 'Paid', id: attribute:t5qq1th1jm3edoqkryz7, identifier: 'paid', path: 'paid-icon.png' };
+
+-- ------------------------------
+-- TABLE DATA: favourite
+-- ------------------------------
+
+UPDATE favourite:6r3t1j953igego3d50c0 CONTENT { id: favourite:6r3t1j953igego3d50c0, location_id: 'a50fb5f1-3192-497f-817d-da5881e278c3', user_id: '2482eda6-5366-4cf1-ae77-3e9e8c7c3d16' };
+UPDATE favourite:iap3t9vl9xsidjprtzmr CONTENT { id: favourite:iap3t9vl9xsidjprtzmr, location_id: '872ddee0-c8cd-42d6-a788-5ed36fb59748', user_id: '2482eda6-5366-4cf1-ae77-3e9e8c7c3d16' };
+UPDATE favourite:leo2cjekxf0uolw3mkzd CONTENT { id: favourite:leo2cjekxf0uolw3mkzd, location_id: '31dae6e7-a183-4501-ab45-6bbfa38f42dc', user_id: '2482eda6-5366-4cf1-ae77-3e9e8c7c3d16' };
+
+-- ------------------------------
+-- TABLE DATA: location_type
+-- ------------------------------
+
+UPDATE location_type:2e8hr762cdv6i45bzeaz CONTENT { display_name: 'Campus', id: location_type:2e8hr762cdv6i45bzeaz, identifier: 'campus', path: 'campus-icon.png' };
+UPDATE location_type:b134b3zfd8pi379kior9 CONTENT { display_name: 'Library', id: location_type:b134b3zfd8pi379kior9, identifier: 'library', path: 'library-icon.png' };
+UPDATE location_type:jwqr2ige7tq13tewphtl CONTENT { display_name: 'Cafe', id: location_type:jwqr2ige7tq13tewphtl, identifier: 'cafe', path: 'cafe-icon.png' };
+UPDATE location_type:pkmnt0l8gea9mywrhlb6 CONTENT { display_name: 'Study Space', id: location_type:pkmnt0l8gea9mywrhlb6, identifier: 'studyspace', path: 'studyspace-icon.png' };
+
+-- ------------------------------
+-- TABLE DATA: noise
+-- ------------------------------
+
+UPDATE noise:a07k5t9e8kjokuk1ucax CONTENT { display_name: 'Quiet', id: noise:a07k5t9e8kjokuk1ucax, identifier: 'quiet', path: 'quiet-icon.png' };
+UPDATE noise:am5b2hxrca58qcbxlb94 CONTENT { display_name: 'Noisy', id: noise:am5b2hxrca58qcbxlb94, identifier: 'noisy', path: 'noisy-icon.png' };
+UPDATE noise:jdx0u5cyhcwgspesmpwv CONTENT { display_name: 'Moderate', id: noise:jdx0u5cyhcwgspesmpwv, identifier: 'moderate', path: 'moderate-icon.png' };
+UPDATE noise:p5k0g5r2k44cfr2xtiyp CONTENT { display_name: 'Silent', id: noise:p5k0g5r2k44cfr2xtiyp, identifier: 'silent', path: 'silent-icon.png' };
+
+-- ------------------------------
+-- TABLE DATA: user
+-- ------------------------------
+
+UPDATE user:qgbcow0i4ogqu6typiui CONTENT { email: 'norpie@gmail.com', id: user:qgbcow0i4ogqu6typiui, identifier: '2482eda6-5366-4cf1-ae77-3e9e8c7c3d16', password: '$argon2id$v=19$m=19456,t=2,p=1$UbIUgDEQR4odGccb6UYGUQ$SrIuKhZwghIfQdPe8YcRaX9uOjQKxp0taekjlZg2HLU', salt: 'UbIUgDEQR4odGccb6UYGUQ' };
+
+-- ------------------------------
+-- TRANSACTION
+-- ------------------------------
+
+COMMIT TRANSACTION;
