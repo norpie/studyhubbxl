@@ -138,14 +138,6 @@ UPDATE attribute:koc1f0gcudwylxnrbalb CONTENT { display_name: 'Reserve', id: att
 UPDATE attribute:t5qq1th1jm3edoqkryz7 CONTENT { display_name: 'Paid', id: attribute:t5qq1th1jm3edoqkryz7, identifier: 'paid', path: 'paid-icon.png' };
 
 -- ------------------------------
--- TABLE DATA: favourite
--- ------------------------------
-
-UPDATE favourite:6r3t1j953igego3d50c0 CONTENT { id: favourite:6r3t1j953igego3d50c0, location_id: 'a50fb5f1-3192-497f-817d-da5881e278c3', user_id: '2482eda6-5366-4cf1-ae77-3e9e8c7c3d16' };
-UPDATE favourite:iap3t9vl9xsidjprtzmr CONTENT { id: favourite:iap3t9vl9xsidjprtzmr, location_id: '872ddee0-c8cd-42d6-a788-5ed36fb59748', user_id: '2482eda6-5366-4cf1-ae77-3e9e8c7c3d16' };
-UPDATE favourite:leo2cjekxf0uolw3mkzd CONTENT { id: favourite:leo2cjekxf0uolw3mkzd, location_id: '31dae6e7-a183-4501-ab45-6bbfa38f42dc', user_id: '2482eda6-5366-4cf1-ae77-3e9e8c7c3d16' };
-
--- ------------------------------
 -- TABLE DATA: location_type
 -- ------------------------------
 
