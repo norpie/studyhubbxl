@@ -3,18 +3,16 @@
         <div class="card-rectangle">
             <p class="titel">{{ name }} </p>
             <p class="adres">{{ address }} </p>
-            <ClickableIcon class="clickable-icon">
-                <p class="icon" v-for="item in location_place">
-                    <Icon :src="item.path" :id="item.id" />
-                </p>
-                <p class="icon" v-for="item in location_attributes">
-                    <Icon :src="item.path" :id="item.id" />
-                </p>
-                <p class="icon" v-for="item in location_noise">
-                    <Icon :src="item.path" :id="item.id" />
-                </p>
-
-            </ClickableIcon>
+            <div class="icon">
+                <div class="attributes">
+                    <Icon :src="noise" />
+                    <Icon :src="type" />
+                    <Icon v-for="item in attributes" :src="item" />
+                </div>
+                <div class="changeicon">
+                    <img :src="currentImage" @click="changeImage" alt="Image" class="image" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -24,13 +22,13 @@ import { defineComponent } from "vue";
 import Icon from "./Icon.vue";
 import ClickableIcon from "./ClickableIcon.vue";
 import type Location from "../models/location";
-import type FilterItem from "@/models/filteritem";
+import { delete_, get } from "@/fetch";
 
 export default defineComponent({
     components: { Icon, ClickableIcon, Location },
 
-
     props: {
+        id: String,
         label: String,
         name: String,
         address: String,
@@ -42,23 +40,28 @@ export default defineComponent({
     },
     data() {
         return {
-            location_place:
-                [{ id: 'cafe', path: 'cafe-icon.png' },
-                { id: 'studyspaces', path: 'studyspace-icon.png' },
-                { id: 'campus', path: 'campus-icon.png' },
-                { id: 'library', path: 'library-icon.png' }] as FilterItem[],
-            location_attributes:
-                [{ id: 'sockets', path: 'socket-icon.png' },
-                { id: 'wifi', path: 'wifi-icon.png' },
-                { id: 'coworking space', path: 'coworking-icon.png' },
-                { id: 'free to access', path: 'free-icon.png' }] as FilterItem[],
-            location_noise:
-                [{ id: 'noisy', path: 'noisy-icon.png' },
-                { id: 'moderate', path: 'moderate-icon.png' },
-                { id: 'quiet', path: 'quiet-icon.png' },
-                { id: 'silent', path: 'silent-icon.png' }] as FilterItem[]
+            currentImage: '/star-empty.png',
+        };
+    },
+    methods: {
+        async changeImage() {
+            if (this.currentImage === '/star-empty.png') {
+                try {
+                    await get<Location[]>('http://localhost:8080/api/v1/users/favourites/' + this.id);
+                    this.currentImage = '/star.png';
+                } catch {
+                    console.log("fail.");
+                }
+            }
+            else {
+                try {
+                    await delete_<Location[]>('http://localhost:8080/api/v1/users/favourites/' + this.id);
+                    this.currentImage = '/star-empty.png';
+                } catch {
+                    console.log("fail.");
+                }
+            }
         }
-
     }
 },
 
@@ -67,6 +70,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.image {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
 .card {
 
     display: flex;
@@ -76,6 +85,10 @@ export default defineComponent({
     height: 100px;
     margin: 10px;
 
+}
+
+.attributes {
+    width: 180px;
 }
 
 .card-rectangle {
@@ -94,14 +107,14 @@ export default defineComponent({
 
 .icon {
     display: inline-flex;
-    justify-content: end;
+    justify-content: left;
     align-items: end;
     height: 25px;
-    width: 25px;
-    float: right;
-}
+    width: 200px;
+    float: left;
+    flex-direction: row;
 
-.clickable-icon {}
+}
 
 .titel {
     margin: 0;
@@ -111,7 +124,7 @@ export default defineComponent({
 }
 
 .adres {
-    float: left;
+    float: right;
     margin: 0;
     font-weight: normal;
     margin-top: 2px;
@@ -119,5 +132,21 @@ export default defineComponent({
     max-width: 200px;
     column-span: 1;
     font-size: small;
+
+}
+
+.button {
+    background: "star-empty.png";
+    width: 20px;
+    height: 20px;
+
+}
+
+.img {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
 }
 </style>
