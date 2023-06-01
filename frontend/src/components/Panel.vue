@@ -4,7 +4,7 @@
             <p class="text">{{ label }}</p>
         </div>
         <div v-if="isExpanded">
-            <slot> </slot>
+            <slot></slot>
         </div>
     </div>
 </template>
@@ -14,16 +14,15 @@
     opacity: 0.7;
     background-color: #34BE82 ;
     border-radius: 10px;
-    width: 400px;
+    width: 220px;
     text-align: center;
     font-size: larger;
     text-transform: uppercase;
     border: 1px solid black;
-    width: 11%;
-    margin: 5px;
+    margin: 5px 5px 5px 5px;
     text-align: left;
     font-size: 11px;
-    padding-left: 5px;
+    padding: 5px 5px 5px 5px;
     list-style-type: none;
     overflow: hidden;
     transition: max-height 0.5s ease-in-out;
@@ -69,7 +68,6 @@ export default defineComponent({
 
     methods: {
         expandPanel(event: MouseEvent) {
-            // Vérifie si le clic a été déclenché sur le bouton lui-même
             if ((event.target as HTMLElement).nodeName !== 'BUTTON') {
                 this.isExpanded = !this.isExpanded;
             }

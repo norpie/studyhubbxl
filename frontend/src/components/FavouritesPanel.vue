@@ -1,8 +1,9 @@
 <template>
     <Panel label="favourites">
         <List class="list" @scroll="handleScroll">
-            <Card class="card-fav" v-for="location in results" :id="location.identifier" :key="location.identifier" :label="location.name">
-            </Card>
+            <Card class="card-loc" v-for="location in store().favourites" :key="location.identifier" :name="location.name"
+                :noise="location.noise" :loc_type="location.location_type" :attributes="location.attributes"
+                :id="location.identifier" :address="location.address" :long="location.long" :lat="location.lat" />
         </List>
     </Panel>
 </template>
@@ -19,6 +20,7 @@ import Icon from './Icon.vue';
 import Card from './Card.vue';
 import List from './List.vue';
 import { get } from '../fetch';
+import { store } from '../store';
 import type Location from '../models/location';
 
 export default {
@@ -44,25 +46,28 @@ export default {
             if (container == null) {
                 return;
             }
+            const end = this.scrollOffset + this.resultsPerPage;
+            this.visibleResults = store.favourites.slice(0, end);
+            this.scrollOffset += this.resultsPerPage;
             if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
                 this.loadMoreResults();
             }
+        },
+        store() {
+            return store;
         },
         async loadMoreResults() {
             if (this.fetching) {
                 return;
             }
             this.fetching = true;
-            const end = this.scrollOffset + this.resultsPerPage;
-            this.visibleResults = this.results.slice(0, end);
-            this.scrollOffset += this.resultsPerPage;
             try {
-                let url = 'http://localhost:8080/api/v1/users/favourites?limit=10&start=' + this.results.length;
+                let url = 'http://localhost:8080/api/v1/users/favourites?limit=10&start=' + store.favourites.length;
                 const response = await get<Location[]>(url, {
                     mode: "cors",
                     credentials: "include"
                 });
-                this.results = this.results.concat(response);
+                store.favourites = store.favourites.concat(response);
             } catch (error) {
                 console.error(error);
             }

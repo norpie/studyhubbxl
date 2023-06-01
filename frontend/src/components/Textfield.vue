@@ -3,6 +3,7 @@ export default {
     props: {
         label: String,
         id: String,
+        type: String,
         placeholder: String,
         v_model: String,
         input: String
@@ -13,7 +14,7 @@ export default {
 
 <template>
     <label for="textfield">{{ label }}</label>
-    <input type="text" class="textfield" :id="id" :placeholder="placeholder" :@input="input" :v-model="v_model" />
+    <input :type="type" class="textfield" :id="id" :placeholder="placeholder" :@input="input" :v-model="v_model" />
 </template>
 
 <style scoped>

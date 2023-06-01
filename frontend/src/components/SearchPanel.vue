@@ -1,52 +1,67 @@
-
 <template>
     <Panel label="search">
-
-        <input class="search-bar" type="text" v-model="searchQuery" id="search-box" @input="handleInput" placeholder="Search...">
-        <div class="search-results" @scroll="handleScroll">
-            <ul>
-                <li v-for="result in visibleResults" :key="result.id">{{ result }}</li>
-            </ul>
-        </div>
+        <input class="search-bar" type="text" id="search-box" @input="handleInput" placeholder="Search...">
+        <List class="list-search-results" @scroll="handleScroll">
+            <Card class="card-loc" v-for="location in store().results" :key="location.identifier" :name="location.name"
+                :noise="location.noise" :loc_type="location.location_type" :attributes="location.attributes"
+                :id="location.identifier" :address="location.address" :long="location.long" :lat="location.lat" />
+        </List>
     </Panel>
 </template>
 <script lang="ts">
 
 import Panel from './Panel.vue';
+import Card from './Card.vue';
+import Icon from './Icon.vue';
+import List from './List.vue';
 import { showResults } from "@/results";
+import { store } from "@/store";
 
 export default {
     components: {
-        Panel
+        Panel, List, Card, Icon
+    },
+    async mounted() {
+        setTimeout(async () => {
+            this.results = await showResults(0, true);
+        }, 1000);
     },
     data() {
         return {
-            searchQuery: '',
-            results: [] as Location[],
+            results: [] as any[],
             visibleResults: [] as Location[],
             scrollOffset: 0,
             resultsPerPage: 10,
             debounceTimer: 0,
+            fetching: false,
         };
     },
     methods: {
-       async handleInput() {
-            this.results = await showResults(0, true);
-            //clearTimeout(this.debounceTimer);
-            //this.debounceTimer = setTimeout(() => {
-            //    this.loadMoreResults();
-            //}, 1000);
+        async handleInput() {
+            clearTimeout(this.debounceTimer);
+            this.debounceTimer = setTimeout(async () => {
+                await showResults(0, true);
+            }, 300);
         },
-       async handleScroll() {
-            this.results = await showResults(this.results.length, false);
-            //const container = document.querySelector('.search-results');
-            //if (container == null) {
-            //    console.log("wrong");
-            //    return;
-            //}
-            //if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
-            //    this.loadMoreResults();
-            //}
+        store() {
+            return store;
+        },
+        async handleScroll() {
+            if (this.fetching) {
+                return;
+            }
+            this.fetching = true;
+            const container = document.querySelector('.list');
+            if (container == null) {
+                return;
+            }
+            const end = this.scrollOffset + this.resultsPerPage;
+            this.visibleResults = store.results.slice(0, end);
+            this.scrollOffset += this.resultsPerPage;
+            if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
+                await showResults(store.results.length, false);
+            }
+            this.fetching = false;
         }
     },
 };
@@ -81,5 +96,4 @@ export default {
     max-height: 300px;
     overflow-y: auto;
 }
-
 </style>
