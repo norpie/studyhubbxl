@@ -56,7 +56,6 @@ async fn main() -> Result<(), Error> {
     let db = get_db().await;
 
     //Check accounts to delete (after 30 days, check every 10 mins)
-
     task::spawn(async move {
         let other_db = get_db().await;
         loop {
@@ -92,7 +91,7 @@ async fn main() -> Result<(), Error> {
         App::new()
             .app_data(Data::new(db.clone()))
             .wrap(cors)
-            .service(web::scope("/api").service(web::scope("/v1").service(v1::scope())))
+            .service(web::scope("/api").service(v1::scope()))
 
         /*.wrap(RateLimiter::new())*/
     })

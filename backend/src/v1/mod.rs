@@ -5,7 +5,7 @@ mod location;
 mod users;
 
 pub fn scope() -> Scope {
-    web::scope("")
+    web::scope("/v1")
         .service(users::scope())
         .service(location::scope())
         .service(filter::scope())
