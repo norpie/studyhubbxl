@@ -1,11 +1,13 @@
+use actix_cors::Cors;
 use actix_web::{
+    http, middleware,
     web::{self, Data},
     App, HttpServer,
 };
 use chrono::Utc;
 use limiter::RateLimiter;
 use models::DeleteOrReset;
-use std::{time::Duration};
+use std::time::Duration;
 
 use std::io::Error;
 use surrealdb::{
@@ -58,7 +60,6 @@ async fn main() -> Result<(), Error> {
     task::spawn(async move {
         let other_db = get_db().await;
         loop {
-
             let query = other_db.select("udelete").await;
             if query.is_err() {
                 continue;
@@ -71,7 +72,7 @@ async fn main() -> Result<(), Error> {
                 }
             }
             other_db.query("BEGIN TRANSACTION;");
-            for user in ids{
+            for user in ids {
                 other_db.query("DELETE udelete WHERE identifier = $identifier; DELETE users WHERE identifier = $identifier;")
                 .bind(("identifier", user)).await.ok();
             }
@@ -80,11 +81,20 @@ async fn main() -> Result<(), Error> {
             sleep(Duration::new(600, 0)).await;
         }
     });
-
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin("http://localhost:5173")
+            .allowed_methods(vec!["GET", "POST"])
+            .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+            .supports_credentials()
+            .allowed_header(http::header::CONTENT_TYPE)
+            .max_age(3600);
         App::new()
             .app_data(Data::new(db.clone()))
-            .service(web::scope("/api").service(web::scope("/v1").service(v1::scope())))/*.wrap(RateLimiter::new())*/
+            .wrap(cors)
+            .service(web::scope("/api").service(web::scope("/v1").service(v1::scope())))
+
+        /*.wrap(RateLimiter::new())*/
     })
     .bind(("127.0.0.1", 8080))?
     .run()
