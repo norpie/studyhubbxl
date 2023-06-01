@@ -8,7 +8,7 @@ export default interface FilterItem{
     pub address: String,
     pub coordinates: Vec<Decimal>,*/
 
-    id: string;
+    identifier: string;
     path: string;
     display_name: string;
 
