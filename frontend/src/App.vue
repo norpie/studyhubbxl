@@ -2,16 +2,30 @@
 import MapBox from "./components/Mapbox.vue"
 import FilterPanel from "./components/FilterPanel.vue"
 import SearchPanel from "./components/SearchPanel.vue"
-import FavouritesPanelVue from "./components/FavouritesPanel.vue"
-import NavPanelVue from "./components/NavPanel.vue"
+import FavouritesPanel from "./components/FavouritesPanel.vue"
+import NavPanel from "./components/NavPanel.vue"
+
+import VueCookies from 'vue-cookies'
+import { store } from '@/store'
+
+function loggedIn() {
+    return $cookies.get('session') != null;
+}
+
+store.loggedIn = loggedIn();
 </script>
 
 <template>
     <MapBox></MapBox>
-    <FilterPanel label="Filters" />
-    <SearchPanel label="search" />
-    <FavouritesPanelVue />
-    <NavPanelVue />
+    <div class="column">
+        <FilterPanel label="Filters" />
+        <SearchPanel label="search" />
+        <FavouritesPanel v-if="store.loggedIn" />
+    </div>
+    <div class="column"></div>
+    <div class="column">
+        <NavPanel />
+    </div>
 </template>
 
 <style>
@@ -19,6 +33,18 @@ import NavPanelVue from "./components/NavPanel.vue"
 
 * {
     font-family: 'Quicksand', sans-serif;
+}
+
+.column {
+    float: left;
+    width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 html {
@@ -35,5 +61,4 @@ body {
 *::-webkit-scrollbar {
     display: none;
 }
-
 </style>
