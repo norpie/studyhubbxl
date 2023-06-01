@@ -16,8 +16,8 @@ use crate::{error::UserError, models::ApiResponse};
 #[derive(Debug, Deserialize)]
 struct Filter {
     search: String,
-    limit: u8,
-    start: u8,
+    limit: u32,
+    start: u32,
     coordinates_only: bool,
     location_types: Vec<String>,
     attributes: Vec<String>,
