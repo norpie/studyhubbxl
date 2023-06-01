@@ -2,7 +2,6 @@
     <Panel label="favourites">
         <List class="list" @scroll="handleScroll">
             <Card class="card-fav" v-for="location in results" :id="location.identifier" :key="location.identifier" :label="location.name">
-                <Icon src="search-icon.png" />
             </Card>
         </List>
     </Panel>
