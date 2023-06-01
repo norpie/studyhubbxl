@@ -26,7 +26,6 @@ pub async fn parse_id(db: &Surreal<Client>, req: HttpRequest) -> Result<Uuid> {
         let uuid_result = Uuid::from_str(cookie.value());
         match uuid_result {
             Ok(session_id) => {
-                dbg!(&session_id);
                 let query_result = db
                     .query("SELECT * FROM session WHERE '$session_id' LIMIT 1")
                     .bind(("session_id", session_id.to_string()))
@@ -39,29 +38,24 @@ pub async fn parse_id(db: &Surreal<Client>, req: HttpRequest) -> Result<Uuid> {
                                 if let Some(session) = optional_session {
                                     Ok(session.user_id)
                                 } else {
-                                    println!("no session");
                                     Err(UserError::Unathorized)
                                 }
                             }
                             Err(_) => {
-                                println!("take error");
                                 Err(UserError::Unathorized)
                             }
                         }
                     }
                     Err(_) => {
-                        println!("error query");
                         Err(UserError::Unathorized)
                     }
                 }
             }
             Err(_) => {
-                println!("error uuid cookie");
                 Err(UserError::Unathorized)
             }
         }
     } else {
-        println!("no cookie");
         Err(UserError::Unathorized)
     }
 }

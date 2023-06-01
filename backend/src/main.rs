@@ -1,11 +1,10 @@
 use actix_cors::Cors;
 use actix_web::{
-    http, middleware,
+    http,
     web::{self, Data},
     App, HttpServer,
 };
 use chrono::Utc;
-use limiter::RateLimiter;
 use models::DeleteOrReset;
 use std::time::Duration;
 
