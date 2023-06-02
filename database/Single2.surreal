@@ -66,7 +66,7 @@ UPDATE attribute:7pjjfe6i8f2yqrmwbo8m CONTENT { display_name: 'Co-working', id: 
 UPDATE attribute:cvkjeopk4zi1ez8vq47i CONTENT { display_name: 'Wifi', id: attribute:cvkjeopk4zi1ez8vq47i, identifier: 'wifi', path: 'wifi-icon.png' };
 UPDATE attribute:d06xsha4vo016duc2j20 CONTENT { display_name: 'Printer', id: attribute:d06xsha4vo016duc2j20, identifier: 'printer', path: 'printer-icon.png' };
 UPDATE attribute:koc1f0gcudwylxnrbalb CONTENT { display_name: 'Reserve', id: attribute:koc1f0gcudwylxnrbalb, identifier: 'reserve', path: 'reserve-icon.png' };
-UPDATE attribute:t5qq1th1jm3edoqkryz7 CONTENT { display_name: 'Paid', id: attribute:t5qq1th1jm3edoqkryz7, identifier: 'paid', path: 'paid-icon.png' };
+UPDATE attribute:t5qq1th1jm3edoqkryz7 CONTENT { display_name: 'Free', id: attribute:t5qq1th1jm3edoqkryz7, identifier: 'free', path: 'free-icon.png' };
 
 -- ------------------------------
 -- TABLE DATA: favourite
@@ -179,4 +179,3 @@ UPDATE user:qgbcow0i4ogqu6typiui CONTENT { email: 'norpie@gmail.com', id: user:q
 -- ------------------------------
 
 COMMIT TRANSACTION;
-
