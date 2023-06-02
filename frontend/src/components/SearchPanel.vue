@@ -23,12 +23,11 @@ export default {
     },
     async mounted() {
         setTimeout(async () => {
-            this.results = await showResults(0, true);
+            await showResults(0, true);
         }, 1000);
     },
     data() {
         return {
-            results: [] as any[],
             visibleResults: [] as Location[],
             scrollOffset: 0,
             resultsPerPage: 10,
@@ -55,8 +54,6 @@ export default {
             if (container == null) {
                 return;
             }
-            const end = this.scrollOffset + this.resultsPerPage;
-            this.visibleResults = store.results.slice(0, end);
             this.scrollOffset += this.resultsPerPage;
             if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
                 await showResults(store.results.length, false);

@@ -91,7 +91,7 @@ export default {
     },
     methods: {
         isLoggedIn() {
-            let value = $cookies.get("session");
+            let value = this.$cookies.get("session");
             return value != null;
         },
         async login() {
@@ -106,9 +106,9 @@ export default {
             try {
                 let result = await loginpost<string>("http://localhost:8080/api/v1/users/auth/login", body);
                 if (keepmeloggedin) {
-                    $cookies.set("session", result, "7d");
+                    this.$cookies.set("session", result, "7d");
                 } else {
-                    $cookies.set("session", result, "session");
+                    this.$cookies.set("session", result, "session");
                 }
                 store.loggedIn = true;
                 this.toggleExpansion();
@@ -130,7 +130,7 @@ export default {
             };
             try {
                 let result = await loginpost<string>("http://localhost:8080/api/v1/users/auth/register", body);
-                $cookies.set("session", result, "session");
+                this.$cookies.set("session", result, "session");
                 store.loggedIn = true;
                 this.toggleExpansion();
             } catch (error) {
@@ -138,7 +138,7 @@ export default {
             }
         },
         logout() {
-            $cookies.remove("session");
+            this.$cookies.remove("session");
             store.loggedIn = false;
             this.toggleExpansion();
         },

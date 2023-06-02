@@ -5,6 +5,6 @@ export default interface Location {
     attributes: string[];
     noise: string;
     address: string;
-    lat: number,
-    long: number
+    lat: string,
+    long: string
 }

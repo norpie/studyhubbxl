@@ -5,11 +5,11 @@ import SearchPanel from "./components/SearchPanel.vue"
 import FavouritesPanel from "./components/FavouritesPanel.vue"
 import NavPanel from "./components/NavPanel.vue"
 
-import VueCookies from 'vue-cookies'
+import { VueCookieNext } from 'vue-cookie-next'
 import { store } from '@/store'
 
 function loggedIn() {
-    return $cookies.get('session') != null;
+    return VueCookieNext.getCookie('session') != null;
 }
 
 store.loggedIn = loggedIn();

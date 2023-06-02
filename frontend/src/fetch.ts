@@ -1,12 +1,13 @@
 import { store } from '@/store';
-import VueCookies from 'vue-cookies';
+import { VueCookieNext } from 'vue-cookie-next'
+
 // https://eckertalex.dev/blog/typescript-fetch-wrapper
 export async function http<T>(path: string, config: RequestInit): Promise<T> {
     const request = new Request(path, config)
     const response = await fetch(request)
 
     if (response.status == 401) {
-        $cookies.remove("session");
+        VueCookieNext.removeCookie("session");
         store.loggedIn = false;
         let json = await response.json().then(json => { return json }).catch(error => { throw error });
         let object = json.result;

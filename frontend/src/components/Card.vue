@@ -24,20 +24,23 @@ import ClickableIcon from "./ClickableIcon.vue";
 import { delete_, post } from "@/fetch";
 import { store } from "@/store";
 import type Location from "@/models/location";
+import type { PropType } from "vue";
 
 export default defineComponent({
     components: { Icon, ClickableIcon, Location },
 
     props: {
-        id: String,
-        label: String,
-        name: String,
-        address: String,
+        id: { type: String, required: true },
+        name: { type: String, required: true },
+        address: { type: String, required: true },
         attributes: {
-            type: Array<string>
+            type: Array as PropType<string[]>,
+            required: true
         },
-        noise: String,
-        loc_type: String
+        noise: { type: String, required: true },
+        loc_type: { type: String, required: true },
+        lat: { type: String, required: true },
+        long: { type: String, required: true },
     },
 
     data() {
@@ -119,7 +122,7 @@ export default defineComponent({
                     const location: Location = {
                         identifier: this.id,
                         name: this.name,
-                        location_type: this.location_type,
+                        location_type: this.loc_type,
                         attributes: this.attributes,
                         noise: this.noise,
                         address: this.address,
