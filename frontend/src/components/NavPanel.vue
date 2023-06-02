@@ -70,7 +70,7 @@ import Checkbox from './Checkbox.vue';
 import Textfield from './Textfield.vue';
 import Button from './Button.vue';
 
-import VueCookies from 'vue-cookies'
+import { VueCookieNext } from 'vue-cookie-next'
 import { store } from '@/store'
 
 export default {
@@ -91,7 +91,7 @@ export default {
     },
     methods: {
         isLoggedIn() {
-            let value = this.$cookies.get("session");
+            let value = VueCookieNext.getCookie("session");
             return value != null;
         },
         async login() {
@@ -106,9 +106,9 @@ export default {
             try {
                 let result = await loginpost<string>("http://localhost:8080/api/v1/users/auth/login", body);
                 if (keepmeloggedin) {
-                    this.$cookies.set("session", result, "7d");
+                    VueCookieNext.setCookie("session", result, { expire: "7d" });
                 } else {
-                    this.$cookies.set("session", result, "session");
+                    VueCookieNext.setCookie("session", result, { expire: "session" });
                 }
                 store.loggedIn = true;
                 this.toggleExpansion();
@@ -130,7 +130,7 @@ export default {
             };
             try {
                 let result = await loginpost<string>("http://localhost:8080/api/v1/users/auth/register", body);
-                this.$cookies.set("session", result, "session");
+                VueCookieNext.setCookie("session", result, { expire: "session" });
                 store.loggedIn = true;
                 this.toggleExpansion();
             } catch (error) {
@@ -138,7 +138,7 @@ export default {
             }
         },
         logout() {
-            this.$cookies.remove("session");
+            VueCookieNext.removeCookie("session");
             store.loggedIn = false;
             this.toggleExpansion();
         },
