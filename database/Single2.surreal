@@ -1,0 +1,182 @@
+-- ------------------------------
+-- OPTION
+-- ------------------------------
+
+OPTION IMPORT;
+
+-- ------------------------------
+-- TABLE: attribute
+-- ------------------------------
+
+DEFINE TABLE attribute SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: favourite
+-- ------------------------------
+
+DEFINE TABLE favourite SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: location
+-- ------------------------------
+
+DEFINE TABLE location SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: location_type
+-- ------------------------------
+
+DEFINE TABLE location_type SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: noise
+-- ------------------------------
+
+DEFINE TABLE noise SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: session
+-- ------------------------------
+
+DEFINE TABLE session SCHEMALESS PERMISSIONS NONE;
+
+-- ------------------------------
+-- TABLE: user
+-- ------------------------------
+
+DEFINE TABLE user SCHEMAFULL;
+
+DEFINE FIELD email ON user TYPE string ASSERT $value != NONE AND is::email($value);
+DEFINE FIELD identifier ON user TYPE string ASSERT $value != NONE;
+DEFINE FIELD password ON user TYPE string ASSERT $value != NONE;
+DEFINE FIELD salt ON user TYPE string ASSERT $value != NONE;
+
+-- ------------------------------
+-- TRANSACTION
+-- ------------------------------
+
+BEGIN TRANSACTION;
+
+-- ------------------------------
+-- TABLE DATA: attribute
+-- ------------------------------
+
+UPDATE attribute:6ky3pvwdy2pwy4d3axyx CONTENT { display_name: 'Sockets', id: attribute:6ky3pvwdy2pwy4d3axyx, identifier: 'socket', path: 'socket-icon.png' };
+UPDATE attribute:7pjjfe6i8f2yqrmwbo8m CONTENT { display_name: 'Co-working', id: attribute:7pjjfe6i8f2yqrmwbo8m, identifier: 'coworking', path: 'coworking-icon.png' };
+UPDATE attribute:cvkjeopk4zi1ez8vq47i CONTENT { display_name: 'Wifi', id: attribute:cvkjeopk4zi1ez8vq47i, identifier: 'wifi', path: 'wifi-icon.png' };
+UPDATE attribute:d06xsha4vo016duc2j20 CONTENT { display_name: 'Printer', id: attribute:d06xsha4vo016duc2j20, identifier: 'printer', path: 'printer-icon.png' };
+UPDATE attribute:koc1f0gcudwylxnrbalb CONTENT { display_name: 'Reserve', id: attribute:koc1f0gcudwylxnrbalb, identifier: 'reserve', path: 'reserve-icon.png' };
+UPDATE attribute:t5qq1th1jm3edoqkryz7 CONTENT { display_name: 'Paid', id: attribute:t5qq1th1jm3edoqkryz7, identifier: 'paid', path: 'paid-icon.png' };
+
+-- ------------------------------
+-- TABLE DATA: favourite
+-- ------------------------------
+
+
+-- ------------------------------
+-- TABLE DATA: location
+-- ------------------------------
+
+UPDATE location:0mnzf7ohpl5ea67dgmfx CONTENT { address: 'Rue John Waterloo Wilson 19, 1000 Bruxelles', attributes: ['socket', 'free', 'reserve'], id: location:0mnzf7ohpl5ea67dgmfx, identifier: '42fe5224-4a45-4043-bd93-c159a2d5deed', lat: '50.84961211', location_type: 'studyspace', long: '4.380832452', name: 'Aximax', noise: 'silent' };
+UPDATE location:0r958k49b6iuqeviyjtj CONTENT { address: 'Av. Fonsny 46, 1060 Saint-Gilles', attributes: ['wifi', 'free'], id: location:0r958k49b6iuqeviyjtj, identifier: 'c54e9f02-d3cb-4c1a-b6a1-0f3dad9032b7', lat: '50.83781118', location_type: 'cafe', long: '4.337353641', name: 'Starbucks station brussel zuid', noise: 'noisy' };
+UPDATE location:0w8bv5fzgk6w85nidafb CONTENT { address: 'Av. du Laerbeek 121, 1090 Jette', attributes: ['wifi', 'socket', 'free', 'coworking', 'printer'], id: location:0w8bv5fzgk6w85nidafb, identifier: 'c31dcbc4-c3d8-49bc-9a82-0aee368df44e', lat: '50.88381619', location_type: 'campus', long: '4.306682565', name: 'Erasmushogeschool Brussel Campus Jette', noise: 'quiet' };
+UPDATE location:0zcveg78mvqahdvlmxun CONTENT { address: 'Av. du Sippelberg 1, 1080 Molenbeek-Saint-Jean', attributes: ['socket', 'free'], id: location:0zcveg78mvqahdvlmxun, identifier: '05ade81f-a197-47c1-8c97-3975b3f72b59', lat: '50.85981626', location_type: 'studyspace', long: '4.324365474', name: 'Sippelberg', noise: 'silent' };
+UPDATE location:2v1c69zxqt9dy55yl0w3 CONTENT { address: 'Pl. Jourdan 13a, 1040 Etterbeek', attributes: ['wifi', 'free'], id: location:2v1c69zxqt9dy55yl0w3, identifier: '1742468d-0315-46e9-ab13-97f105e2ad11', lat: '50.83777574', location_type: 'cafe', long: '4.381832266', name: 'OR cafe', noise: 'quiet' };
+UPDATE location:2xdvkesc4j7jh0m38m8d CONTENT { address: 'Rue du Marché Aux Herbes 80, 1000 Bruxelles', attributes: [], id: location:2xdvkesc4j7jh0m38m8d, identifier: '8437f55b-832e-408e-a6a1-b7f07401f2fb', lat: '50.84736912', location_type: 'cafe', long: '4.354842049', name: 'Lloyed Coffee Eatery  Grand-Place', noise: 'moderate' };
+UPDATE location:33xgv5ef3ezz210suse6 CONTENT { address: 'Blvd Géneral Jacques 124, 1050 Ixelles', attributes: ['free'], id: location:33xgv5ef3ezz210suse6, identifier: 'b6162fcc-710a-432f-bb0b-3b1dc3fef4e0', lat: '50.8202516', location_type: 'cafe', long: '4.382433999', name: 'Coffe Lacrosse', noise: 'noisy' };
+UPDATE location:35ooppc7hsum52af553q CONTENT { address: 'Keizerslaan 4, 1000 Brussel', attributes: ['wifi', 'socket'], id: location:35ooppc7hsum52af553q, identifier: '3831d662-658f-4ace-b806-2a4521cdcdd0', lat: '50.84346', location_type: 'library', long: '4.35786', name: 'Koninklijke Bibliotheek KBR', noise: 'silent' };
+UPDATE location:3cgdafeixmmgo0rtnt0z CONTENT { address: "Bd d'Anvers 40, 1000 Bruxelles", attributes: ['wifi', 'socket', 'free', 'coworking'], id: location:3cgdafeixmmgo0rtnt0z, identifier: '797dc24e-9b47-4ec0-9f90-360d6e7d4ddc', lat: '50.85762476', location_type: 'studyspace', long: '4.350754667', name: 'Capital vzw/asbl', noise: 'noisy' };
+UPDATE location:3rp37cvmr7s16vbfwsvj CONTENT { address: 'Pl. Jean Rey 8, 1040 Bruxelles', attributes: ['wifi', 'socket'], id: location:3rp37cvmr7s16vbfwsvj, identifier: '23b71837-6e86-4945-8331-3e1ceff3802c', lat: '50.84154', location_type: 'cafe', long: '4.37994', name: 'Living room', noise: 'noisy' };
+UPDATE location:4g2r9maa9bcdmq0c6muw CONTENT { address: 'Rue Charles Martel 8, 1000 Bruxelles', attributes: ['wifi', 'socket', 'coworking'], id: location:4g2r9maa9bcdmq0c6muw, identifier: 'f078709c-1f36-4d4f-8a6b-e5e489b81182', lat: '50.84592717', location_type: 'cafe', long: '4.379954391', name: 'The Mug Schuman', noise: 'quiet' };
+UPDATE location:527d6qa6gm226yxq6t8o CONTENT { address: 'Rue Jean Stas 26, 1060 Saint-Gilles', attributes: [], id: location:527d6qa6gm226yxq6t8o, identifier: '45b43906-11ea-454c-a437-0f2e4e4f31be', lat: '50.83489084', location_type: 'cafe', long: '4.355724684', name: 'Lloyed Coffee Eatery Louise', noise: 'moderate' };
+UPDATE location:5in3qk7ruxucb08yzkzt CONTENT { address: 'Rue Vanderschrick 5, 1060 Saint-Gilles', attributes: ['socket', 'coworking'], id: location:5in3qk7ruxucb08yzkzt, identifier: 'c930278f-3150-43bb-ad64-d2b1df67ca7c', lat: '50.83209488', location_type: 'cafe', long: '4.345178935', name: 'Nomad Community', noise: 'quiet' };
+UPDATE location:5x19qps9iuizpnn4p5ey CONTENT { address: 'Rue de Namur 29, 1000 Bruxelles', attributes: ['wifi', 'socket'], id: location:5x19qps9iuizpnn4p5ey, identifier: '51514b93-bd3b-43fa-9341-62bb70968582', lat: '50.84052708', location_type: 'cafe', long: '4.359602412', name: 'Golden Bean', noise: 'moderate' };
+UPDATE location:68mocvqcn4ky0endmc0g CONTENT { address: 'Rue de Namur 28, 1000 Bruxelles', attributes: ['wifi', 'socket'], id: location:68mocvqcn4ky0endmc0g, identifier: 'be107ab1-1fa3-4c09-9067-f9cdade03e06', lat: '50.84072365', location_type: 'cafe', long: '4.360094086', name: 'JAT cafe', noise: 'moderate' };
+UPDATE location:6ze8jjgz3nhbecsyq3n1 CONTENT { address: '1000, Rue de la Régence 26, 1000 Bruxelles', attributes: ['wifi', 'socket'], id: location:6ze8jjgz3nhbecsyq3n1, identifier: 'f17e5f01-5696-40b1-9fed-dfac1d9929ea', lat: '50.84043332', location_type: 'cafe', long: '4.357611082', name: 'Cafe du sablon', noise: 'quiet' };
+UPDATE location:71q1hfwbg2dn9x6vt7wt CONTENT { address: 'Av. de la Couronne 443, 1050 Ixelles', attributes: [], id: location:71q1hfwbg2dn9x6vt7wt, identifier: 'fd3486eb-319e-4d48-bd2c-04dfda124a77', lat: '50.81679553', location_type: 'cafe', long: '4.390603385', name: 'Lloyed Coffe Eatery Universite', noise: 'moderate' };
+UPDATE location:a0f4f8i86werg990j2tv CONTENT { address: 'Rue Haute 245, 1000 Bruxelles', attributes: ['wifi', 'socket', 'free'], id: location:a0f4f8i86werg990j2tv, identifier: 'fe68cf0f-78d4-4286-82af-1e5d0e36e982', lat: '50.83916387', location_type: 'library', long: '4.347409915', name: 'Bibliotheek Breugel', noise: 'quiet' };
+UPDATE location:aob0qp6ywn1md8k4kc47 CONTENT { address: 'Rue de Louvain 2, 1000 Bruxelles', attributes: [], id: location:aob0qp6ywn1md8k4kc47, identifier: '65c0f62f-a76a-4579-932c-41a1132f819d', lat: '50.84800608', location_type: 'cafe', long: '4.363491631', name: 'Leopold cafe Royal', noise: 'moderate' };
+UPDATE location:b6nk1frhugd7wnrl2sey CONTENT { address: 'Rue des Palais 90, 1030 Schaerbeek', attributes: ['wifi'], id: location:b6nk1frhugd7wnrl2sey, identifier: '6c995243-1e46-4daa-b95a-104aad952196', lat: '50.86218937', location_type: 'cafe', long: '4.367193217', name: 'Fika lounge Brussels', noise: 'noisy' };
+UPDATE location:b8jfirk6zwvdqujqggw8 CONTENT { address: 'Sint-Goriksplein 1, 1000 Brussel', attributes: ['wifi', 'free', 'coworking'], id: location:b8jfirk6zwvdqujqggw8, identifier: '74d1e11e-d426-4f78-8402-7fd22fcf805e', lat: '50.84909243', location_type: 'cafe', long: '4.34761003', name: 'cafe De Hallen ', noise: 'noisy' };
+UPDATE location:bo43z7x9o080qq5tb3xl CONTENT { address: 'Rue du Fort 35, 1060 Saint-Gilles', attributes: ['wifi', 'socket', 'free', 'reserve'], id: location:bo43z7x9o080qq5tb3xl, identifier: 'e54af001-e69d-4ece-ad48-cfdb6222a8de', lat: '50.82894205', location_type: 'studyspace', long: '4.343737521', name: 'GC pianofabriek', noise: 'silent' };
+UPDATE location:bq8d1ul2c1ptrduk8esq CONTENT { address: 'Bergensesteenweg 1432, 1070 Anderlecht', attributes: ['socket', 'free'], id: location:bq8d1ul2c1ptrduk8esq, identifier: 'c11116a5-d5a6-47e4-b714-eed8066c14db', lat: '50.81095455', location_type: 'cafe', long: '4.291497079', name: 'Ikea Anderlecht', noise: 'noisy' };
+UPDATE location:c2cr3f2hrr9okhc27lue CONTENT { address: 'Rue Edith Cavell 10, 1180 Uccle', attributes: [], id: location:c2cr3f2hrr9okhc27lue, identifier: '18ce9b0d-f2d9-4d36-b985-efcec4eae13f', lat: '50.81361566', location_type: 'cafe', long: '4.356792873', name: 'Seven brussels', noise: 'moderate' };
+UPDATE location:c7wkxgwcng76yapc4b2n CONTENT { address: 'Rue de la Serrure 28, 1000 Bruxelles', attributes: ['wifi', 'socket', 'free', 'coworking', 'printer'], id: location:c7wkxgwcng76yapc4b2n, identifier: '50983776-617d-4bb2-b9a1-530cc9e4b816', lat: '50.85214635', location_type: 'campus', long: '4.342336989', name: 'Erasmushogeschool Brussel Campus Kanal', noise: 'quiet' };
+UPDATE location:cm6n3ycvi6cekb7xqsbd CONTENT { address: 'Bd de la Plaine 2, 1050 Ixelles', attributes: ['wifi', 'socket', 'free', 'coworking', 'printer'], id: location:cm6n3ycvi6cekb7xqsbd, identifier: '2125953f-506c-46b7-b095-06ae98eb54da', lat: '50.82529085', location_type: 'campus', long: '4.3952295', name: 'Study Guidenace Etterbeek', noise: 'moderate' };
+UPDATE location:cplz3li1cug2gcsqf8si CONTENT { address: 'Rue Ravenstein 64, 1000 Bruxelles', attributes: ['wifi', 'socket'], id: location:cplz3li1cug2gcsqf8si, identifier: '76ff45f4-12c7-4122-baad-75f06b76f6ba', lat: '50.84597375', location_type: 'cafe', long: '4.359000647', name: 'Bambino', noise: 'noisy' };
+UPDATE location:d6gvklu2z5zvccjt6cip CONTENT { address: 'Bd Emile Jacqmain 56, 1000 Bruxelles', attributes: ['wifi', 'free'], id: location:d6gvklu2z5zvccjt6cip, identifier: '6e74f29a-785e-4534-a72e-637028199401', lat: '50.85355752', location_type: 'cafe', long: '4.354513868', name: 'Caffe Batavia', noise: 'moderate' };
+UPDATE location:db626d9bo9ett37mvwez CONTENT { address: 'Muntplein, Munt 21, 1000 Brussel', attributes: ['free'], id: location:db626d9bo9ett37mvwez, identifier: 'fcc762d5-e0b3-4fde-90b6-a203f8b9fefd', lat: '50.85156876', location_type: 'cafe', long: '4.353697706', name: 'Hema', noise: 'moderate' };
+UPDATE location:dmmse3k8hj1ukc4chwo6 CONTENT { address: "Avenue de l'épée 18/20, 1000 Bruxelles", attributes: ['free'], id: location:dmmse3k8hj1ukc4chwo6, identifier: 'd4a8a5e8-e48d-49c4-838d-d6293293b88a', lat: '50.83847839', location_type: 'cafe', long: '4.350922383', name: 'Coffe Lacrosse Poelaerts', noise: 'noisy' };
+UPDATE location:e5j8qamx3wetxnfgaqc4 CONTENT { address: 'Rue Picard 7, boîte 100, 1000 Bruxelles', attributes: ['socket', 'free', 'reserve'], id: location:e5j8qamx3wetxnfgaqc4, identifier: 'de9373b4-3a0c-4247-a293-1f44e5e71a3b', lat: '50.86487586', location_type: 'studyspace', long: '4.345780228', name: 'Gare Maritime Spaces', noise: 'silent' };
+UPDATE location:ezba42970x1f844pq7i0 CONTENT { address: 'Karel Rogierplein 1, 1210 Sint-Joost-ten-Node', attributes: ['free'], id: location:ezba42970x1f844pq7i0, identifier: 'be767ea3-b030-4ece-8fa0-705f76507fb0', lat: '50.85602467', location_type: 'cafe', long: '4.358439821', name: 'Starbucks rogier', noise: 'noisy' };
+UPDATE location:fdef3zmbhrq2r7mxov1a CONTENT { address: 'Av. des Arts 44, 1040 Bruxelles', attributes: ['free', 'coworking', 'reserve'], id: location:fdef3zmbhrq2r7mxov1a, identifier: '0b523063-8f06-4924-9eb3-eb2965cda32b', lat: '50.84308794', location_type: 'studyspace', long: '4.369871506', name: 'Clockwise', noise: 'quiet' };
+UPDATE location:fheofb2wri0i2ia18i5i CONTENT { address: 'Rue des Six Jetons 70, 1000 Bruxelles', attributes: ['wifi', 'socket', 'free', 'coworking', 'printer'], id: location:fheofb2wri0i2ia18i5i, identifier: 'a4cd8ff8-a01f-4861-8e3a-7cd5a2278552', lat: '50.84787485', location_type: 'campus', long: '4.343367418', name: 'Erasmushogeschool Brussel Campus Bloemenhof', noise: 'quiet' };
+UPDATE location:g3ajbv70fh4vazpjqibn CONTENT { address: 'Rue du Miroir 7, 1000 Bruxelles', attributes: ['free'], id: location:g3ajbv70fh4vazpjqibn, identifier: '603544ef-c810-4909-9b35-1be16ce055d8', lat: '50.84049246', location_type: 'studyspace', long: '4.347120945', name: 'Salle Miroir', noise: 'quiet' };
+UPDATE location:gbvf73g4a03mqhyw0y9w CONTENT { address: 'Chau. de Vleurgat 169, 1050 Ixelles', attributes: ['wifi', 'coworking'], id: location:gbvf73g4a03mqhyw0y9w, identifier: '0bb4db93-4bdb-480d-8f9d-9a2ce5945a54', lat: '50.82268008', location_type: 'cafe', long: '4.36680639', name: 'Local Club Vleurgat', noise: 'quiet' };
+UPDATE location:gdzox68flqh2aso603kd CONTENT { address: "Quai de l'Industrie 170, 1070 Anderlecht", attributes: ['wifi', 'socket', 'free', 'coworking'], id: location:gdzox68flqh2aso603kd, identifier: '538f9ca1-04e8-4501-9b30-0f7634f0dd82', lat: '50.84272678', location_type: 'campus', long: '4.322979661', name: 'Studentenresto Campus Kaai', noise: 'noisy' };
+UPDATE location:h3v7eqxdw6cc9cdtsfbz CONTENT { address: 'Schuman metro station below, Robert Schumanplein, 1000 Brussel', attributes: ['free', 'coworking'], id: location:h3v7eqxdw6cc9cdtsfbz, identifier: '1636b56a-f990-4aa6-b8ef-c104f6417403', lat: '50.84281948', location_type: 'cafe', long: '4.38311998', name: 'Starbucks Metro Schuman ', noise: 'noisy' };
+UPDATE location:hjq4wowmpt51lbl6seoq CONTENT { address: 'Rue de la Sablonnière 20, 1000 Bruxelles', attributes: ['wifi', 'socket', 'free', 'reserve'], id: location:hjq4wowmpt51lbl6seoq, identifier: '822b1811-702e-4d4b-863a-b81e93dbaa2b', lat: '50.85226664', location_type: 'studyspace', long: '4.366436429', name: 'Brik', noise: 'quiet' };
+UPDATE location:hz6ee2n5wcr7l6ia65th CONTENT { address: "Quai de l'Industrie 170, 1070 Anderlecht", attributes: ['wifi', 'socket', 'free', 'coworking', 'printer'], id: location:hz6ee2n5wcr7l6ia65th, identifier: 'b1ca01c2-e8a1-474b-bb23-aee023b5be10', lat: '50.84251856', location_type: 'campus', long: '4.322683261', name: 'Erasmushogeschool Brussel Kaai', noise: 'noisy' };
+UPDATE location:in28usbouih7huz5qkts CONTENT { address: 'Rue de Namur 4, 1000 Bruxelles', attributes: [], id: location:in28usbouih7huz5qkts, identifier: '0acf09a1-fb67-410a-ae82-43b493f0fa65', lat: '50.84177344', location_type: 'cafe', long: '4.35976122', name: 'Bouche', noise: 'moderate' };
+UPDATE location:j1xndbea7hu2pjo6zz3f CONTENT { address: 'Rue Montagne aux Herbes Potagères 26, 1000 Bruxelles', attributes: ['wifi', 'socket', 'free'], id: location:j1xndbea7hu2pjo6zz3f, identifier: 'a449068a-bb43-46cf-9c6b-6d95a72facce', lat: '50.8494139', location_type: 'campus', long: '4.356137382', name: 'KU Leuven', noise: 'noisy' };
+UPDATE location:jt1n6n0wuuycurvq7reb CONTENT { address: 'Rue de la Croix de Fer 53, 1000 Bruxelles', attributes: ['wifi'], id: location:jt1n6n0wuuycurvq7reb, identifier: 'a8f19965-351e-4f3e-947a-c51719548ef7', lat: '50.84838793', location_type: 'cafe', long: '4.364900399', name: 'My little cup', noise: 'quiet' };
+UPDATE location:la9ci0ao7ax0r6pfqt6f CONTENT { address: 'Av. du Laerbeek 103, 1090 Jette', attributes: ['wifi', 'socket', 'free', 'coworking', 'printer', 'reserve'], id: location:la9ci0ao7ax0r6pfqt6f, identifier: 'ff5df3e0-148e-4be5-84e6-9806c892d072', lat: '50.88732438', location_type: 'campus', long: '4.306891422', name: 'Medische Bibliotheek VUB', noise: 'silent' };
+UPDATE location:mqhgae8gj4arzsfwtvy9 CONTENT { address: 'Av. Louise 231, 1050 Bruxelles', attributes: ['coworking'], id: location:mqhgae8gj4arzsfwtvy9, identifier: 'd181fff8-2199-4c83-98fc-a551e85d35d0', lat: '50.82576237', location_type: 'cafe', long: '4.366045322', name: 'Silversquare Bailli', noise: 'moderate' };
+UPDATE location:n0rvpm8ni87kraxj2cm9 CONTENT { address: 'Pl. de la Vieille Halle aux Blés 36, 1000 Bruxelles', attributes: ['wifi', 'free'], id: location:n0rvpm8ni87kraxj2cm9, identifier: 'dc54bc29-8ff1-47b0-8bf0-7cf9d558c4ec', lat: '50.84410684', location_type: 'cafe', long: '4.354056183', name: 'Gruun', noise: 'moderate' };
+UPDATE location:o3ysozit42qbj1wz8ypw CONTENT { address: 'Bergensesteenweg 95, 1070 Anderlecht', attributes: ['socket', 'free'], id: location:o3ysozit42qbj1wz8ypw, identifier: 'e769c7c9-b272-46c3-ac53-4d64439c5a7c', lat: '50.84385665', location_type: 'studyspace', long: '4.333727238', name: 'Circularium', noise: 'silent' };
+UPDATE location:qmjsfqbbtzrxaiddu1au CONTENT { address: 'Hertogin van Brabantplaats 35, 1080 Sint-Jans-Molenbeek', attributes: ['free'], id: location:qmjsfqbbtzrxaiddu1au, identifier: '78ddfdc1-1474-4322-b852-8006889b5ebf', lat: '50.85084741', location_type: 'cafe', long: '4.330235595', name: 'Caprice cafe', noise: 'noisy' };
+UPDATE location:rksdpxp8cw5l2k5avt0d CONTENT { address: 'Bd Emile Jacqmain 135, 1000 Bruxelles', attributes: ['socket', 'free', 'reserve'], id: location:rksdpxp8cw5l2k5avt0d, identifier: '677f97ac-326c-4421-89f4-754321b9fbde', lat: '50.85557539', location_type: 'studyspace', long: '4.357211218', name: 'VGC Jacqmain', noise: 'silent' };
+UPDATE location:rno3zliv0kf15rz3txtr CONTENT { address: 'Rue des Palais 70, 1030 Bruxelles', attributes: ['wifi', 'socket', 'free'], id: location:rno3zliv0kf15rz3txtr, identifier: 'a8523e6b-baa2-4a5b-9330-3e27e114889f', lat: '50.86173259', location_type: 'campus', long: '4.367408394', name: 'LUCA school of Arts', noise: 'noisy' };
+UPDATE location:u4s2vfxibamrani9c30i CONTENT { address: 'Av. de Jette 225, 1090 Jette', attributes: ['wifi', 'socket', 'free', 'reserve'], id: location:u4s2vfxibamrani9c30i, identifier: '42e949a2-a903-480f-98b9-2fa3db1799af', lat: '50.87235951', location_type: 'studyspace', long: '4.322856263', name: 'Mona', noise: 'silent' };
+UPDATE location:v8zas2o4k4a6sadt4t6x CONTENT { address: 'Montgomery metro station, below, Tervurenlaan, 1150 Sint-Pieters-Woluwe', attributes: ['free'], id: location:v8zas2o4k4a6sadt4t6x, identifier: 'c5fd3738-3bf3-4754-a486-33f9ba98e347', lat: '50.83940485', location_type: 'cafe', long: '4.406245626', name: 'Starbucks Metro Montgomery', noise: 'noisy' };
+UPDATE location:w1a7ev46sbihsh5sf3yp CONTENT { address: "Metro de l'Avenue Louise, Av. Louise, 1000 Bruxelles", attributes: ['free'], id: location:w1a7ev46sbihsh5sf3yp, identifier: 'fbd1acaf-6870-4544-996c-3af875c2076e', lat: '50.83609969', location_type: 'cafe', long: '4.355392321', name: 'Starbucks Metro louise', noise: 'noisy' };
+UPDATE location:wipnz6w3ez8abzwbqbov CONTENT { address: 'Pl. Charles Rogier 20, 1210 Bruxelles', attributes: ['wifi'], id: location:wipnz6w3ez8abzwbqbov, identifier: '65994636-91fc-4606-ab01-9e006d9cf74e', lat: '50.85584681', location_type: 'cafe', long: '4.361372366', name: 'Serra Brussels', noise: 'quiet' };
+UPDATE location:wv6u3l1dauhlxobtt5p7 CONTENT { address: 'Vooruitgangstraat 76, 1030 Schaarbeek', attributes: ['wifi', 'free', 'coworking'], id: location:wv6u3l1dauhlxobtt5p7, identifier: '3eb13fd7-26c5-4815-a0e5-037dd3761f36', lat: '50.86030166', location_type: 'cafe', long: '4.359810016', name: 'Starbucks Station Brussel Noord', noise: 'noisy' };
+UPDATE location:wwm0u0mheiyykdxq810y CONTENT { address: 'Place de la Monnaie 6,1000 Brussel,', attributes: ['wifi', 'socket', 'free', 'printer', 'reserve'], id: location:wwm0u0mheiyykdxq810y, identifier: 'a272aac8-f23b-4efe-ba61-9965e2d221a9', lat: '50.8495', location_type: 'library', long: '4.35425', name: 'Muntpunt', noise: 'silent' };
+UPDATE location:xltkl6fh246zts4e15dz CONTENT { address: 'Grensstraat 2, 1210 Sint-Joost-ten-Node', attributes: ['free'], id: location:xltkl6fh246zts4e15dz, identifier: '4158231c-2173-4ac8-b8e4-21444f05bdf2', lat: '50.8544558', location_type: 'library', long: '4.369975213', name: 'bib Joske ', noise: 'quiet' };
+UPDATE location:xmjk83l5m9e0geqk2bnq CONTENT { address: 'Antoine Dansaertstraat 209, 1000 Brussel', attributes: ['wifi', 'free'], id: location:xmjk83l5m9e0geqk2bnq, identifier: 'b131b317-7175-4603-8afa-3139e202cc0d', lat: '50.85355676', location_type: 'retaurant', long: '4.341994399', name: 'Walvis', noise: 'moderate' };
+UPDATE location:xp3z2sdln4fva4abhvqe CONTENT { address: 'Place Cardinal Mercier 10, Jette, Belgium', attributes: ['wifi', 'free', 'printer'], id: location:xp3z2sdln4fva4abhvqe, identifier: 'f4563e12-1ef1-41be-b058-c84fbd76aebb', lat: '50.8805624', location_type: 'library', long: '4.3276617', name: 'Bibliothèque de Jette', noise: 'silent' };
+UPDATE location:xv3ebr6x37wxbx25axee CONTENT { address: 'Rue du Midi 45, 1000 Bruxelles', attributes: ['free'], id: location:xv3ebr6x37wxbx25axee, identifier: 'c6080bb2-fc59-4ad2-8fbe-6efa7fd01501', lat: '50.84694725', location_type: 'cafe', long: '4.349903861', name: 'Cafe Capital', noise: 'moderate' };
+UPDATE location:y18z49dxf45zdl7ypj8n CONTENT { address: "Carr de l'Europe, 1000 Bruxelles", attributes: ['wifi', 'free'], id: location:y18z49dxf45zdl7ypj8n, identifier: '4ec7088f-9da0-4365-822d-0f1aa0ac8159', lat: '50.84540745', location_type: 'cafe', long: '4.357189333', name: 'Starbucks station centraal', noise: 'noisy' };
+UPDATE location:ytkmlsurum5o2vf83pvi CONTENT { address: 'Bd de la Plaine 2, 1050 Ixelles', attributes: ['wifi', 'socket', 'free', 'coworking', 'printer'], id: location:ytkmlsurum5o2vf83pvi, identifier: 'bd8222a0-5d82-4748-8572-f791a1e246c4', lat: '50.82499385', location_type: 'campus', long: '4.396025051', name: 'Vrije Universiteit Brussel', noise: 'quiet' };
+UPDATE location:z2vysplzm27nx1ne74ho CONTENT { address: 'Bld Bischoffsheim 15, 1000 Bruxelles', attributes: ['wifi', 'socket ', 'free', 'reserve'], id: location:z2vysplzm27nx1ne74ho, identifier: '1ca1250c-9d3b-4464-80e6-e596c3122a1b', lat: '50.8503072', location_type: 'studyspace', long: '4.368335473', name: 'Meetdistrict Madou', noise: 'silent' };
+UPDATE location:z71o2ze3w038efgmzwvw CONTENT { address: 'Bd Industriel 9, 1070 Anderlecht', attributes: ['wifi', 'socket', 'free', 'coworking', 'reserve'], id: location:z71o2ze3w038efgmzwvw, identifier: 'a54cd4b7-c8a3-4b3e-a606-e322d478d4cf', lat: '50.82962131', location_type: 'studyspace', long: '4.317401378', name: 'Regus City Box', noise: 'quiet' };
+UPDATE location:zczvq5mbatwelbglc6ek CONTENT { address: 'Rue Saint-Guidon 97, 1070 Anderlecht', attributes: ['wifi', 'socket', 'free'], id: location:zczvq5mbatwelbglc6ek, identifier: '27675000-22f6-422f-9ca4-5a1387f410a1', lat: '50.83616202', location_type: 'library', long: '4.300775192', name: 'Bibliothèque Anderlecht', noise: 'silent' };
+UPDATE location:ziybqpyb18byrnmvnvgg CONTENT { address: 'Grote Markt 4, 1000 Brussel', attributes: ['free'], id: location:ziybqpyb18byrnmvnvgg, identifier: 'f6cd5103-420a-48c3-92a9-ce4327be4d71', lat: '50.84725527', location_type: 'cafe', long: '4.351724538', name: 'Starbucks Grote Markt ', noise: 'noisy' };
+UPDATE location:znue0jf0h7lyi9ydwnd8 CONTENT { address: 'Av. Fonsny 131, 1060 Saint-Gilles', attributes: ['socket', 'free', 'reserve'], id: location:znue0jf0h7lyi9ydwnd8, identifier: '76dd5889-0fbc-459f-ac12-3280c7774fde', lat: '50.83393509', location_type: 'studyspace', long: '4.330156287', name: 'Cube', noise: 'silent' };
+
+-- ------------------------------
+-- TABLE DATA: location_type
+-- ------------------------------
+
+UPDATE location_type:2e8hr762cdv6i45bzeaz CONTENT { display_name: 'Campus', id: location_type:2e8hr762cdv6i45bzeaz, identifier: 'campus', path: 'campus-icon.png' };
+UPDATE location_type:b134b3zfd8pi379kior9 CONTENT { display_name: 'Library', id: location_type:b134b3zfd8pi379kior9, identifier: 'library', path: 'library-icon.png' };
+UPDATE location_type:jwqr2ige7tq13tewphtl CONTENT { display_name: 'Cafe', id: location_type:jwqr2ige7tq13tewphtl, identifier: 'cafe', path: 'cafe-icon.png' };
+UPDATE location_type:pkmnt0l8gea9mywrhlb6 CONTENT { display_name: 'Study Space', id: location_type:pkmnt0l8gea9mywrhlb6, identifier: 'studyspace', path: 'studyspace-icon.png' };
+
+-- ------------------------------
+-- TABLE DATA: noise
+-- ------------------------------
+
+UPDATE noise:a07k5t9e8kjokuk1ucax CONTENT { display_name: 'Quiet', id: noise:a07k5t9e8kjokuk1ucax, identifier: 'quiet', path: 'quiet-icon.png' };
+UPDATE noise:am5b2hxrca58qcbxlb94 CONTENT { display_name: 'Noisy', id: noise:am5b2hxrca58qcbxlb94, identifier: 'noisy', path: 'noisy-icon.png' };
+UPDATE noise:jdx0u5cyhcwgspesmpwv CONTENT { display_name: 'Moderate', id: noise:jdx0u5cyhcwgspesmpwv, identifier: 'moderate', path: 'moderate-icon.png' };
+UPDATE noise:p5k0g5r2k44cfr2xtiyp CONTENT { display_name: 'Silent', id: noise:p5k0g5r2k44cfr2xtiyp, identifier: 'silent', path: 'silent-icon.png' };
+
+-- ------------------------------
+-- TABLE DATA: session
+-- ------------------------------
+
+
+-- ------------------------------
+-- TABLE DATA: user
+-- ------------------------------
+
+UPDATE user:qgbcow0i4ogqu6typiui CONTENT { email: 'norpie@gmail.com', id: user:qgbcow0i4ogqu6typiui, identifier: '2482eda6-5366-4cf1-ae77-3e9e8c7c3d16', password: '$argon2id$v=19$m=19456,t=2,p=1$UbIUgDEQR4odGccb6UYGUQ$SrIuKhZwghIfQdPe8YcRaX9uOjQKxp0taekjlZg2HLU', salt: 'UbIUgDEQR4odGccb6UYGUQ' };
+
+-- ------------------------------
+-- TRANSACTION
+-- ------------------------------
+
+COMMIT TRANSACTION;
+
