@@ -1,5 +1,5 @@
 <template>
-    <mapbox-marker :lngLat="[lon, lat]" :draggable="false">
+    <mapbox-marker :lngLat="[long, lat]" :draggable="false">
         <mapbox-popup>
             <slot></slot>
         </mapbox-popup>
@@ -9,7 +9,7 @@
 <script lang="ts">
 export default {
     props: {
-        lon: Number,
+        long: Number,
         lat: Number,
     }
 }

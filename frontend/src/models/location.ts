@@ -1,9 +1,10 @@
 export default interface Location {
-    id: string;
+    identifier: string;
     name: string;
     location_type: string;
     attributes: string[];
     noise: string;
     address: string;
-    coordinates: string[];
+    lat: string,
+    long: string
 }

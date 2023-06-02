@@ -45,12 +45,12 @@ impl<T: Serialize> Responder for ApiResponse<T> {
         let result = serde_json::to_string(&self);
         match result {
             Ok(json) => HttpResponseBuilder::new(StatusCode::from_u16(self.status).unwrap())
-                .insert_header(("Access-Control-Allow-Origin", "http://localhost:5173"))
                 .content_type(ContentType::json())
                 .body(json),
             Err(_e) => {
                 // TODO: log
-                HttpResponse::InternalServerError().body("")
+                HttpResponse::InternalServerError()
+                    .body("")
             }
         }
     }
@@ -58,7 +58,7 @@ impl<T: Serialize> Responder for ApiResponse<T> {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-    pub id: Uuid,
+    pub identifier: Uuid,
     pub email: String,
     pub password: String,
     pub salt: String,
@@ -66,6 +66,7 @@ pub struct User {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FilterItem {
+    identifier: String,
     path: String,
     display_name: String,
 }
@@ -78,14 +79,16 @@ pub struct Location {
     pub attributes: Vec<String>,
     pub noise: String,
     pub address: String,
-    pub coordinates: Vec<Decimal>,
+    pub lat: Decimal,
+    pub long: Decimal,
 }
 
 impl Location {
     pub fn coords(&self) -> Coordinates {
         Coordinates {
             identifier: self.identifier,
-            coordinates: self.coordinates.clone(),
+            lat: self.lat,
+            long: self.long,
         }
     }
 }
@@ -93,7 +96,8 @@ impl Location {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Coordinates {
     pub identifier: Uuid,
-    pub coordinates: Vec<Decimal>,
+    pub lat: Decimal,
+    pub long: Decimal,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -119,6 +123,6 @@ struct Favourite {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Session {
-    pub identifier: Uuid,
+    pub user_id: Uuid,
     pub session_id: Uuid,
 }

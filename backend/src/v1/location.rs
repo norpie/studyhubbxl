@@ -1,6 +1,6 @@
 use actix_web::{
     get, post,
-    web::{self, Data, Json, Path, Query},
+    web::{self, Data, Json, Path},
     Either, Scope,
 };
 use serde::Deserialize;
@@ -14,15 +14,11 @@ use crate::{
 use crate::{error::UserError, models::ApiResponse};
 
 #[derive(Debug, Deserialize)]
-struct Search {
-    search: Option<String>,
-    limit: Option<u8>,
-    start: Option<u8>,
-    coordinates_only: Option<bool>,
-}
-
-#[derive(Debug, Deserialize)]
 struct Filter {
+    search: String,
+    limit: u32,
+    start: u32,
+    coordinates_only: bool,
     location_types: Vec<String>,
     attributes: Vec<String>,
     noise: Vec<String>,
@@ -32,39 +28,23 @@ struct Filter {
 #[post("")]
 async fn filter_search_locations(
     db: Data<Surreal<Client>>,
-    search: Query<Search>,
     filter: Json<Filter>,
 ) -> Result<Either<ApiResponse<Vec<Location>>, ApiResponse<Vec<Coordinates>>>> {
-    let start = if let Some(start) = search.start {
-        start
-    } else {
-        0
-    };
-    let limit = if let Some(limit) = search.limit {
-        limit
-    } else {
-        20
-    };
-    let search_string = if let Some(search) = &search.search {
-        search.clone()
-    } else {
-        "".to_string()
-    };
     let sql = "SELECT * FROM location WHERE noise IN $noise AND attributes CONTAINSALL $attributes AND location_type IN $location_types AND name ~ $search LIMIT $limit START $start";
     let mut query = db.query(sql);
     query = query.bind(("noise", &filter.noise));
-    query = query.bind(("search", &search_string));
+    query = query.bind(("search", &filter.search));
     query = query.bind(("attributes", &filter.attributes));
     query = query.bind(("location_types", &filter.location_types));
-    query = query.bind(("start", start));
-    query = query.bind(("limit", limit));
+    query = query.bind(("start", filter.start));
+    query = query.bind(("limit", filter.limit));
     let query_result = query.await;
     match query_result {
         Ok(mut response) => {
             let parse_result: surrealdb::Result<Vec<Location>> = response.take(0);
             match parse_result {
                 Ok(locations) => {
-                    if search.coordinates_only.is_some() && search.coordinates_only.unwrap() {
+                    if filter.coordinates_only {
                         let mut coords = Vec::new();
                         for location in locations {
                             coords.push(location.coords());

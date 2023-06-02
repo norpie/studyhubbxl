@@ -29,8 +29,8 @@ pub enum UserError {
 impl error::ResponseError for UserError {
     fn error_response(&self) -> HttpResponse<actix_web::body::BoxBody> {
         HttpResponse::build(self.status_code())
-            .insert_header(ContentType::html())
-            .body(self.to_string())
+            .insert_header(ContentType::json())
+            .body("{ \"error\" : \"".to_string() + &self.to_string() + "\" }")
     }
 
     fn status_code(&self) -> StatusCode {

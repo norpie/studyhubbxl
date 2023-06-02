@@ -1,43 +1,46 @@
 
 <script lang="ts">
+import Icon from './Icon.vue';
 export default {
     props: {
         label: String,
-        id: String
+        id: String,
+        src: String,
+        class: String,
+        checked: Boolean
     },
-    data() {
-        return {
-            checked: false
-        }
+    components: {
+        Icon
     }
 }
 </script>
 
 <template>
     <div class="checkbox-wrapper">
+        <input type="checkbox" :class="class" :id="id" :checked="checked" />
+        <Icon v-if="src != null" :src="src" />
         <label for="checkbox">{{ label }}</label>
-        <input type="checkbox" class="checkbox" :id="id" v-model="checked" />
     </div>
 </template>
 
 <style scoped>
-
-.checkbox-wrapper{
+.checkbox-wrapper {
     display: inline;
 }
-.checkbox:checked {
+
+input[type='checkbox']:checked {
     background-color: black;
     appearance: none;
 }
 
-.checkbox {
+input[type='checkbox'] {
     accent-color: grey;
     background-color: white;
     border-color: black;
     border-style: solid;
     border-radius: 2px;
     border-width: 1px;
-    margin-top:5px;
+    margin-top: 5px;
     margin-left: 5px;
     margin-right: 5px;
     height: 10px;
