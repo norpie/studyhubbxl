@@ -49,7 +49,6 @@ async fn del_favourite(
     req: HttpRequest,
 ) -> Result<ApiResponse<&'static str>> {
     let id = super::parse_id(&db, req).await?;
-    dbg!(&id, &location_id);
     let query_result = db
         .query(
             "DELETE favourite WHERE user_id='".to_string()
@@ -59,7 +58,6 @@ async fn del_favourite(
                 + "';",
         )
         .await;
-    dbg!(&query_result);
     match query_result {
         Ok(_) => Ok(ApiResponse::new("")),
         Err(err) => {
